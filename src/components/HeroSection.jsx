@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { ArrowDown, ArrowUpRight, Sparkles, MapPin } from 'lucide-react';
 import { portfolioContent } from '../data/content';
+import { motionConfig } from '../data/motion.config';
 import HeroOrbit from './HeroOrbit';
 
 /**
@@ -168,7 +169,7 @@ export default function HeroSection({ isDark }) {
             onMouseEnter={() => setIsHeadlineHovered(true)}
             onMouseLeave={() => setIsHeadlineHovered(false)}
             style={{ paddingInline: '0.04em' }}
-            className="relative grid [grid-template-columns:1fr] [grid-template-rows:1fr] font-headline uppercase leading-[0.92] tracking-[var(--track-display)] text-[clamp(2.75rem,11.5vw,7.6rem)] lg:text-[clamp(3.6rem,6.8vw,7.2rem)] xl:text-[clamp(4.2rem,7.2vw,8.2rem)] select-none my-1.5 sm:my-3 overflow-visible cursor-default z-15"
+            className="relative grid [grid-template-columns:1fr] [grid-template-rows:1fr] font-headline uppercase leading-[0.92] tracking-[var(--track-display)] text-[clamp(2.2rem,9.2vw,7.6rem)] lg:text-[clamp(3.6rem,6.8vw,7.2rem)] xl:text-[clamp(4.2rem,7.2vw,8.2rem)] select-none my-1 sm:my-3 overflow-visible cursor-default z-15"
           >
             {/* Layer 1 (Back): Blue Overprint Layer */}
             <motion.div
@@ -253,7 +254,7 @@ export default function HeroSection({ isDark }) {
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-            className={`mt-2 sm:mt-4 text-base sm:text-xl md:text-2xl font-body font-bold max-w-xl leading-snug tracking-[var(--track-lead)] text-balance transition-colors ${
+            className={`mt-1 sm:mt-4 text-xs sm:text-xl md:text-2xl font-body font-bold max-w-xl leading-snug tracking-[var(--track-lead)] text-balance transition-colors ${
               isDark ? 'text-[#FFF8EC]' : 'text-ink'
             }`}
           >
@@ -265,43 +266,43 @@ export default function HeroSection({ isDark }) {
             initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
             animate={{ opacity: 1, y: 0 }}
             transition={{ duration: 0.5, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-            className="mt-3 sm:mt-6 flex flex-wrap items-center gap-3 sm:gap-5"
+            className="hidden lg:flex mt-2 sm:mt-6 flex-row items-center gap-2 sm:gap-5"
           >
             {/* CTA Primary */}
             <MagneticButton
               onClick={() => scrollTo('packaging')}
-              className="btn-primary btn-slide-fill group whitespace-nowrap cursor-pointer text-xs sm:text-sm"
+              className="btn-primary btn-slide-fill group whitespace-nowrap cursor-pointer px-3 sm:px-5 py-2 sm:py-3 text-[11px] sm:text-sm"
             >
-              <span className="relative z-10 flex items-center gap-2">
+              <span className="relative z-10 flex items-center gap-1.5 sm:gap-2">
                 <span>{hero.ctaPrimary.label}</span>
-                <ArrowDown className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-y-1 text-[#111111]" />
+                <ArrowDown className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-y-1 text-[#111111]" />
               </span>
             </MagneticButton>
 
             {/* CTA Secondary */}
             <MagneticButton
               onClick={() => scrollTo('contact')}
-              className="btn-secondary group whitespace-nowrap cursor-pointer text-xs sm:text-sm"
+              className="btn-secondary group whitespace-nowrap cursor-pointer px-3 sm:px-5 py-2 sm:py-3 text-[11px] sm:text-sm"
             >
-              <span className="flex items-center gap-1.5">
+              <span className="flex items-center gap-1 sm:gap-1.5">
                 <span>{hero.ctaSecondary.label}</span>
-                <ArrowUpRight className="w-3.5 h-3.5 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                <ArrowUpRight className="w-3 h-3 sm:w-4 sm:h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
               </span>
             </MagneticButton>
           </motion.div>
 
-          {/* Proof Stats row - strictly confined to left column (max-w-xl) so it never crosses behind Kesav */}
-          <div className={`pt-3 sm:pt-6 mt-3 sm:mt-6 border-t-2 max-w-xl flex flex-wrap items-center gap-4 sm:gap-10 transition-colors ${
+          {/* Proof Stats row (Desktop) - strictly confined to left column (max-w-xl) so it never crosses behind Kesav */}
+          <div className={`hidden lg:flex pt-2 sm:pt-6 mt-2 sm:mt-6 border-t-2 max-w-xl flex-row items-center justify-between sm:justify-start gap-2 sm:gap-10 transition-colors ${
             isDark ? 'border-[#2E2A24]' : 'border-ink'
           }`}>
             {hero.stats.map((stat, idx) => (
-              <div key={idx} className="flex items-baseline gap-1.5 sm:gap-2">
-                <span className={`font-headline text-lg sm:text-2xl lg:text-3xl font-black tabular-nums tracking-[0.02em] ${
+              <div key={idx} className="flex items-baseline gap-1 sm:gap-2">
+                <span className={`font-headline text-base sm:text-2xl lg:text-3xl font-black tabular-nums tracking-[0.02em] ${
                   isDark ? 'text-yellow' : 'text-ink'
                 }`}>
                   {stat.value}
                 </span>
-                <span className={`font-mono text-[10px] sm:text-xs uppercase font-bold tracking-[var(--track-label)] ${
+                <span className={`font-mono text-[9px] sm:text-xs uppercase font-bold tracking-[var(--track-label)] ${
                   isDark ? 'text-[#C9BFAE]' : 'text-ink/80'
                 }`}>
                   {stat.label}
@@ -312,18 +313,78 @@ export default function HeroSection({ isDark }) {
         </div>
       </div>
 
-      {/* Hero Orbit Container: Anchored strictly to bottom: 0 across all screens! */}
+      {/* Mobile Bottom Action & Stats Area: sits above fog bank (z-[26]), clears mobile bottom nav bar (bottom-20), below Kesav's face */}
+      <div className="lg:hidden absolute bottom-20 sm:bottom-24 left-0 right-0 w-full px-4 flex flex-col items-center gap-2 z-[26] pointer-events-auto">
+        {/* Mobile CTAs */}
+        <div className="flex flex-row items-center justify-center gap-2.5 w-full max-w-sm">
+          <MagneticButton
+            onClick={() => scrollTo('packaging')}
+            className="btn-primary btn-slide-fill flex-1 py-2.5 px-3 text-xs font-mono font-bold uppercase min-h-[44px]"
+          >
+            <span className="relative z-10 flex items-center justify-center gap-1.5">
+              <span>{hero.ctaPrimary.label}</span>
+              <ArrowDown className="w-3.5 h-3.5 text-[#111111]" />
+            </span>
+          </MagneticButton>
+
+          <MagneticButton
+            onClick={() => scrollTo('contact')}
+            className="btn-secondary flex-1 py-2.5 px-3 text-xs font-mono font-bold uppercase min-h-[44px]"
+          >
+            <span className="flex items-center justify-center gap-1.5">
+              <span>{hero.ctaSecondary.label}</span>
+              <ArrowUpRight className="w-3.5 h-3.5" />
+            </span>
+          </MagneticButton>
+        </div>
+
+        {/* Mobile Stats Row */}
+        <div className={`border-t-2 w-full max-w-sm flex flex-row items-center justify-between px-2 pt-1.5 transition-colors ${
+          isDark ? 'border-[#2E2A24]' : 'border-ink'
+        }`}>
+          {hero.stats.map((stat, idx) => (
+            <div key={idx} className="flex items-baseline gap-1">
+              <span className={`font-headline text-sm sm:text-base font-black tabular-nums ${
+                isDark ? 'text-yellow' : 'text-ink'
+              }`}>
+                {stat.value}
+              </span>
+              <span className={`font-mono text-[9px] uppercase font-bold tracking-[var(--track-label)] ${
+                isDark ? 'text-[#C9BFAE]' : 'text-ink/80'
+              }`}>
+                {stat.label}
+              </span>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      {/* Mobile Solid Base Band: Full width of hero, ~20% of photo height, seamless base */}
       <div
-        className="absolute bottom-0 z-10 pointer-events-none flex items-end justify-center
+        className="lg:hidden absolute bottom-0 left-0 right-0 w-full pointer-events-none z-[6]"
+        style={{
+          height: `calc(${motionConfig.mobileHero.photoHeight} * ${motionConfig.mobileHero.solidBaseHeightPercent / 100})`,
+          backgroundColor: isDark ? motionConfig.mobileHero.baseColorDark : motionConfig.mobileHero.baseColorLight,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* Hero Orbit Container: Anchored to bottom across all screens */}
+      <div
+        className="absolute z-10 pointer-events-none flex items-end justify-center
           left-1/2 -translate-x-1/2 lg:left-auto lg:translate-x-0
           lg:right-[-1%] xl:right-[1%] 2xl:right-[4%]"
         style={{
+          bottom: isDesktop
+            ? '0px'
+            : `calc(${motionConfig.mobileHero.photoHeight} * ${(motionConfig.mobileHero.solidBaseHeightPercent - motionConfig.mobileHero.photoOverlapBasePercent) / 100})`,
           height: isDesktop
             ? 'clamp(420px, 78vh, 820px)'
-            : 'clamp(252px, 70vw, 380px)',
+            : motionConfig.mobileHero.photoHeight,
           width: isDesktop
             ? 'clamp(420px, 78vh, 820px)'
-            : 'clamp(252px, 70vw, 380px)',
+            : motionConfig.mobileHero.photoHeight,
+          maxWidth: isDesktop ? 'none' : 'calc(100vw / 0.78)',
         }}
       >
         <div className="w-full h-full pointer-events-auto">

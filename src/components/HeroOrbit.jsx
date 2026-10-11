@@ -23,29 +23,26 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
   const [isMobile, setIsMobile] = useState(false);
   const [pointerTilt, setPointerTilt] = useState({ x: 0, y: 0 });
 
-  // Responsive device check (< 768px is mobile)
+  // Responsive device check (< 1024px is mobile / tablet)
   useEffect(() => {
     const handleResize = () => {
-      setIsMobile(window.innerWidth < 768);
+      setIsMobile(window.innerWidth < 1024);
     };
     handleResize();
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
   }, []);
 
-  // Filter tools: 14 tools on desktop, 8 tools on mobile
+  // Filter tools: 14 tools on desktop, 5 tools on mobile
   const activeTools = useMemo(() => {
     if (isMobile) {
-      // 8 representative tools across packaging, design, video, and AI
+      // 5 representative tools on mobile
       return [
         TOOL_LOGOS[0], // Affinity
         TOOL_LOGOS[1], // Photoshop
         TOOL_LOGOS[2], // Figma
-        TOOL_LOGOS[4], // Pacdora
         TOOL_LOGOS[6], // Premiere Pro
-        TOOL_LOGOS[9], // DaVinci Resolve
         TOOL_LOGOS[10], // Claude
-        TOOL_LOGOS[12], // Antigravity
       ];
     }
     return TOOL_LOGOS;
@@ -96,7 +93,9 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
           const depth = Math.sin(a);
           const isNear = depth >= 0;
 
-          el.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0px) scale(${isNear ? 1.25 : 0.75})`;
+          const nearScaleToUse = isMobile ? motionConfig.orbit.mobileNearScale : 1.25;
+          const farScaleToUse = isMobile ? motionConfig.orbit.mobileFarScale : 0.75;
+          el.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0px) scale(${isNear ? nearScaleToUse : farScaleToUse})`;
           el.style.zIndex = isNear ? '30' : '10';
           el.style.opacity = isNear ? '1.0' : '0.65';
           el.style.filter = 'none';
@@ -174,6 +173,8 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
         const baseSpeedBlur = Math.min(maxBlur, Math.max(0, linearSpeed * speedMult));
 
         const count = activeTools.length;
+        const effectiveNearScale = isMobile ? motionConfig.orbit.mobileNearScale : nearScale;
+        const effectiveFarScale = isMobile ? motionConfig.orbit.mobileFarScale : farScale;
 
         for (let i = 0; i < count; i++) {
           const el = tilesRef.current[i];
@@ -208,15 +209,15 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
             zIndex = 50;
             blur = 0;
           } else if (isNear) {
-            // Near half: passes IN FRONT of chest (z-index 30, scale 1.25 = ~60px, full opacity, sharp)
-            scale = nearScale - (nearScale - 1.0) * (1 - depth);
+            // Near half: passes IN FRONT of chest and fog (z-index 30, sharp)
+            scale = effectiveNearScale - (effectiveNearScale - 1.0) * (1 - depth);
             opacity = nearOpacity;
-            zIndex = 30; // Strictly in front of photo (z-20)
+            zIndex = 30; // Strictly in front of fog (z-22, z-24) and photo (z-20)
             blur = baseSpeedBlur * (1 - depth * 0.4); // Sharpest at peak foreground
           } else {
-            // Far half: passes BEHIND neck & head (z-index 10, scale 0.75 = ~36px, opacity 0.60, blurred)
+            // Far half: passes BEHIND neck & head (z-index 10, scale 0.75 / 0.73, blurred)
             const normalizedFar = (depth + 1); // 0 to 1
-            scale = farScale + (1.0 - farScale) * normalizedFar;
+            scale = effectiveFarScale + (1.0 - effectiveFarScale) * normalizedFar;
             opacity = farOpacity + (nearOpacity - farOpacity) * normalizedFar * 0.7;
             zIndex = 10; // Strictly behind photo (z-20)
             blur = Math.min(maxBlur, baseSpeedBlur + farBlurPx * (1 - normalizedFar));
@@ -252,6 +253,10 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
     hoveredIndexRef.current = null;
     setActiveTooltip(null);
   };
+
+  const baseRgb = isDark
+    ? motionConfig.mobileHero.baseColorDarkRgb
+    : motionConfig.mobileHero.baseColorLightRgb;
 
   return (
     <div
@@ -346,8 +351,12 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
             ? `rotateX(${pointerTilt.x * 0.4}deg) rotateY(${pointerTilt.y * 0.4}deg)`
             : 'none',
           transition: 'transform 0.15s ease-out',
-          maskImage: 'linear-gradient(to bottom, #000 88%, transparent 100%)',
-          WebkitMaskImage: 'linear-gradient(to bottom, #000 88%, transparent 100%)',
+          maskImage: isMobile
+            ? `linear-gradient(to bottom, #000 ${motionConfig.mobileHero.maskFadeStartPercent}%, transparent 100%)`
+            : 'linear-gradient(to bottom, #000 88%, transparent 100%)',
+          WebkitMaskImage: isMobile
+            ? `linear-gradient(to bottom, #000 ${motionConfig.mobileHero.maskFadeStartPercent}%, transparent 100%)`
+            : 'linear-gradient(to bottom, #000 88%, transparent 100%)',
         }}
       >
         <img
@@ -360,10 +369,58 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
           loading="eager"
           className="w-auto h-full max-w-full object-contain object-bottom pointer-events-none select-none"
           style={{
+            aspectRatio: '1 / 1',
             filter: 'drop-shadow(2px 0 0 #FFF8EC) drop-shadow(-2px 0 0 #FFF8EC) drop-shadow(0 2px 0 #FFF8EC) drop-shadow(0 -2px 0 #FFF8EC) drop-shadow(0 16px 32px rgba(0,0,0,0.45))',
           }}
         />
       </div>
+
+      {/* 5b. Layer 2: Mobile Fog Bank (z-index 22, height 30%, 3 stacked radial gradients, blur 14px) */}
+      {isMobile && (
+        <div
+          className="absolute bottom-0 left-0 right-0 w-full pointer-events-none z-[22]"
+          style={{
+            height: `${motionConfig.mobileHero.fogBankHeightPercent}%`,
+            background: `
+              radial-gradient(ellipse 70% 85% at 50% 100%, rgba(${baseRgb}, 0.95) 0%, transparent 80%),
+              radial-gradient(ellipse 60% 75% at 20% 90%, rgba(${baseRgb}, 0.70) 0%, transparent 75%),
+              radial-gradient(ellipse 65% 80% at 80% 95%, rgba(${baseRgb}, 0.50) 0%, transparent 75%)
+            `,
+            filter: `blur(${motionConfig.mobileHero.fogBankBlurPx}px)`,
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* 5c. Layer 3: Mobile Drifting Mist (z-index 24, two blobs drifting translateX +/-6%, blur 24px) */}
+      {isMobile && (
+        <>
+          <div
+            className={`absolute bottom-0 left-[-10%] w-[120%] pointer-events-none z-[24] ${
+              shouldReduceMotion ? '' : 'animate-mist-drift-1'
+            }`}
+            style={{
+              height: '38%',
+              background: `radial-gradient(ellipse 80% 70% at 35% 85%, rgba(${baseRgb}, ${motionConfig.mobileHero.driftMistOpacity}) 0%, transparent 70%)`,
+              filter: `blur(${motionConfig.mobileHero.driftMistBlurPx}px)`,
+              '--drift-dur-1': `${motionConfig.mobileHero.driftDuration1Sec}s`,
+            }}
+            aria-hidden="true"
+          />
+          <div
+            className={`absolute bottom-0 left-[-10%] w-[120%] pointer-events-none z-[24] ${
+              shouldReduceMotion ? '' : 'animate-mist-drift-2'
+            }`}
+            style={{
+              height: '34%',
+              background: `radial-gradient(ellipse 75% 65% at 65% 80%, rgba(${baseRgb}, ${motionConfig.mobileHero.driftMistOpacity}) 0%, transparent 70%)`,
+              filter: `blur(${motionConfig.mobileHero.driftMistBlurPx}px)`,
+              '--drift-dur-2': `${motionConfig.mobileHero.driftDuration2Sec}s`,
+            }}
+            aria-hidden="true"
+          />
+        </>
+      )}
 
       {/* 
         6. Orbiting Logo Tiles: Direct children of containerRef centered at (50%, centerYPercent).

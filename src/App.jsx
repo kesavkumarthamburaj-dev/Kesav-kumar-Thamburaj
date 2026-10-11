@@ -89,6 +89,19 @@ export default function App() {
     setIsDark((prev) => !prev);
   };
 
+  const [isMobile, setIsMobile] = useState(() => {
+    if (typeof window !== 'undefined') return window.innerWidth < 1024;
+    return false;
+  });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const checkMobile = () => setIsMobile(window.innerWidth < 1024);
+    checkMobile();
+    window.addEventListener('resize', checkMobile, { passive: true });
+    return () => window.removeEventListener('resize', checkMobile);
+  }, []);
+
   // Lightbox navigation helper
   const handleLightboxNav = (direction) => {
     if (!activeLightbox) return;
@@ -127,10 +140,14 @@ export default function App() {
         <HeroSection isDark={isDark} />
 
         {/* Torn Edge Transition: Hero -> Packaging */}
-        {/* Dark tints: hero #1A1700 -> packaging #1F0E15 */}
+        {/* On mobile, seamlessly matches Hero's solid base band */}
         <TornEdge
           color={isDark ? '#1F0E15' : '#FF3D81'}
-          bgColor={isDark ? '#1A1700' : '#FFD60A'}
+          bgColor={
+            isDark
+              ? (isMobile ? '#0F0E0C' : '#1A1700')
+              : (isMobile ? '#ECC000' : '#FFD60A')
+          }
           className="-mt-6 sm:-mt-8 md:-mt-12 relative z-20"
         />
 

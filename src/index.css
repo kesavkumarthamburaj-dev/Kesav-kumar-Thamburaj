@@ -930,4 +930,39 @@
   .animate-sticker-wobble {
     animation: none !important;
   }
+  .animate-mist-drift-1,
+  .animate-mist-drift-2 {
+    animation: none !important;
+    transform: none !important;
+  }
 }
+
+/* Mobile Hero Fog Mist Drift Keyframes (GPU transform-only 60fps) */
+@keyframes mistDrift1 {
+  0% {
+    transform: translateX(-6%);
+  }
+  100% {
+    transform: translateX(6%);
+  }
+}
+
+@keyframes mistDrift2 {
+  0% {
+    transform: translateX(6%);
+  }
+  100% {
+    transform: translateX(-6%);
+  }
+}
+
+.animate-mist-drift-1 {
+  animation: mistDrift1 var(--drift-dur-1, 14s) ease-in-out infinite alternate;
+  will-change: transform;
+}
+
+.animate-mist-drift-2 {
+  animation: mistDrift2 var(--drift-dur-2, 19s) ease-in-out infinite alternate;
+  will-change: transform;
+}
+

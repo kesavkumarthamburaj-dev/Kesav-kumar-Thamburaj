@@ -27,13 +27,15 @@ export const motionConfig = {
     planeRotateDeg: -15, // Visual 2D slant of orbit plane
     centerYPercent: 38, // Centered around head and shoulders (38% from top)
     rxPercentDesktop: 42, // rx = 42% of container width (wraps wide around shoulders)
-    rxPercentMobile: 41, // rx = 41% on mobile
+    rxPercentMobile: 46, // ring rx about 46% of container width on mobile
     ryPercent: 16, // ry = 16% of container height (passes behind neck / in front of chest)
     tileCountDesktop: 14,
-    tileCountMobile: 8,
+    tileCountMobile: 5, // 5 representative tools on mobile
     tileSizePx: 48,
-    farScale: 0.75, // Depth < 0 (36px far, behind head)
-    nearScale: 1.25, // Depth > 0 (60px near, in front of chest)
+    mobileNearScale: 1.08, // near tiles 44 to 52px (48px * 1.08 = 51.8px)
+    mobileFarScale: 0.73, // far tiles 32 to 38px (48px * 0.73 = 35px)
+    farScale: 0.75, // Desktop depth < 0 (36px far, behind head)
+    nearScale: 1.25, // Desktop depth > 0 (60px near, in front of chest)
     farOpacity: 0.60,
     nearOpacity: 1.0,
     farBlurPx: 1.2,
@@ -65,5 +67,24 @@ export const motionConfig = {
   performance: {
     fpsDropThreshold: 50, // Auto-reduce if FPS < 50
     fpsCheckWindowMs: 2000,
+  },
+
+  // 5. Mobile Hero Photo, Base & Fog Settings (tunable)
+  mobileHero: {
+    photoHeight: 'clamp(380px, 64vh, 640px)', // about 62 to 68vh
+    solidBaseHeightPercent: 20, // about 18 to 22% of photo height
+    photoOverlapBasePercent: 10, // photo overlaps base top by about 10%
+    fogBankHeightPercent: 30, // height about 30% of photo
+    fogBankBlurPx: 14, // filter: blur(14px)
+    driftMistBlurPx: 24, // filter: blur(24px)
+    driftMistOpacity: 0.60, // 60% opacity
+    driftDuration1Sec: 14, // 14s ease-in-out infinite alternate
+    driftDuration2Sec: 19, // 19s ease-in-out infinite alternate
+    driftTranslateXPct: 6, // translateX +/- 6%
+    maskFadeStartPercent: 78, // mask-image: linear-gradient(to bottom, #000 78%, transparent 100%)
+    baseColorDark: '#0F0E0C',
+    baseColorLight: '#ECC000', // hero yellow #FFD60A darkened slightly
+    baseColorDarkRgb: '15, 14, 12',
+    baseColorLightRgb: '236, 192, 0',
   },
 };
