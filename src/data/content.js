@@ -184,8 +184,8 @@ export const portfolioContent = {
         category: "Gig Poster",
         format: "Halftone Screen Overlay",
         image: "/work/poster-coimbatore-gig.webp",
-        width: 800,
-        height: 1150,
+        width: 683,
+        height: 1024,
         details: "Screen-printed underground concert poster featuring kinetic distorted typography, ink bleeds, and rough halftone texture overlays.",
       },
       {
