@@ -194,14 +194,28 @@ export default function SoftwareSection({ isDark, onOpenProductModal }) {
                   <div className={`mt-6 pt-4 border-t flex items-center justify-between ${
                     isDark ? 'border-[#2E2A24]' : 'border-ink/20'
                   }`}>
-                    <motion.button
-                      whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
-                      onClick={() => onOpenProductModal(product)}
-                      className="btn-slide-fill group/btn min-h-[46px] px-6 py-2.5 bg-yellow text-[#111111] font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2.5 border-[#111111] shadow-[2px_2px_0px_#111111] hover:bg-mint hover:translate-x-[1px] hover:translate-y-[1px] transition-colors duration-150 inline-flex items-center gap-2 cursor-pointer"
-                    >
-                      <span>View</span>
-                      <ArrowUpRight className="w-4 h-4 text-[#111111] transition-transform duration-200 group-hover/btn:translate-x-1.5" />
-                    </motion.button>
+                    <div className="flex items-center gap-2.5">
+                      {product.url && (
+                        <a
+                          href={product.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          onClick={(e) => e.stopPropagation()}
+                          className="btn-slide-fill inline-flex items-center gap-1.5 px-4 py-2 bg-mint text-[#111111] font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2.5 border-[#111111] shadow-[2px_2px_0px_#111111] hover:bg-yellow hover:scale-105 transition-all cursor-pointer"
+                        >
+                          <span>Live App</span>
+                          <ArrowUpRight className="w-4 h-4 text-[#111111]" />
+                        </a>
+                      )}
+
+                      <motion.button
+                        whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                        onClick={() => onOpenProductModal(product)}
+                        className="btn-slide-fill group/btn px-4 py-2 bg-yellow text-[#111111] font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2 border-[#111111] shadow-[2px_2px_0px_#111111] hover:bg-mint transition-colors duration-150 inline-flex items-center gap-1.5 cursor-pointer"
+                      >
+                        <span>Details</span>
+                      </motion.button>
+                    </div>
 
                     <span className={`font-mono text-xs font-bold uppercase tracking-[var(--track-label)] ${
                       isDark ? 'text-[#C9BFAE]' : 'text-ink/70'

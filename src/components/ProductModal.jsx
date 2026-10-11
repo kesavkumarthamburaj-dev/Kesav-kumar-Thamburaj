@@ -1,6 +1,6 @@
 import React, { useEffect } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { X, Code2 } from 'lucide-react';
+import { X, Code2, ArrowUpRight, ExternalLink } from 'lucide-react';
 
 export default function ProductModal({ product, isDark, onClose }) {
   const shouldReduceMotion = useReducedMotion();
@@ -81,6 +81,18 @@ export default function ProductModal({ product, isDark, onClose }) {
             }`}>
               {product.tagline}
             </p>
+            {product.url && (
+              <a
+                href={product.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="inline-flex items-center gap-1.5 mt-2 px-3 py-1 bg-mint/15 text-mint border border-mint/40 rounded font-mono text-xs font-bold hover:bg-mint hover:text-[#111111] transition-all group/link"
+              >
+                <ExternalLink className="w-3.5 h-3.5" />
+                <span>{product.url.replace(/^https?:\/\//, '')}</span>
+                <ArrowUpRight className="w-3.5 h-3.5 transition-transform group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5" />
+              </a>
+            )}
           </div>
 
           {/* Screenshot container with paper frame in dark mode */}
@@ -155,6 +167,17 @@ export default function ProductModal({ product, isDark, onClose }) {
             Founder &bull; Software Architecture
           </span>
           <div className="flex items-center gap-3">
+            {product.url && (
+              <a
+                href={product.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="btn-slide-fill inline-flex items-center gap-2 px-5 py-2.5 bg-mint text-[#111111] font-mono text-xs sm:text-sm font-black uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2.5 border-[#111111] shadow-[3px_3px_0px_#111111] hover:bg-yellow hover:scale-105 active:scale-95 transition-all"
+              >
+                <span>Launch Live App</span>
+                <ArrowUpRight className="w-4 h-4 text-[#111111]" />
+              </a>
+            )}
             <motion.button
               onClick={onClose}
               whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
