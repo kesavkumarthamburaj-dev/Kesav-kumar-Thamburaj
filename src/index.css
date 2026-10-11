@@ -1,0 +1,933 @@
+@import "tailwindcss";
+
+@theme {
+  --color-pink: var(--color-pink);
+  --color-blue: var(--color-blue);
+  --color-yellow: var(--color-yellow);
+  --color-mint: var(--color-mint);
+  --color-tangerine: var(--color-tangerine);
+  --color-ink: var(--color-ink);
+  --color-paper: var(--color-paper);
+  --color-surface: var(--color-surface);
+  --color-border: var(--color-border);
+  --color-muted: var(--color-muted);
+
+  --font-headline: 'Anton', Impact, sans-serif;
+  --font-body: 'DM Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono', monospace;
+
+  /* Tailwind theme letter-spacing mappings */
+  --tracking-display: var(--track-display);
+  --tracking-heading: var(--track-heading);
+  --tracking-body: var(--track-body);
+  --tracking-lead: var(--track-lead);
+  --tracking-label: var(--track-label);
+  --tracking-button: var(--track-button);
+}
+
+/* -------------------------------------------------------------
+   THEME DESIGN TOKENS
+   ------------------------------------------------------------- */
+:root {
+  color-scheme: light;
+
+  /* Tracking & Type Rhythm Tokens (always in em so they scale with font size)
+     Principle: the bigger the type, the tighter the tracking.
+     The smaller and more uppercase, the wider the tracking.
+     Never letter-space lowercase body text. */
+  --track-display: -0.02em;        /* giant headlines, Anton, uppercase, 96px and up */
+  --track-display-mobile: -0.015em; /* on mobile (64 to 80px) to ensure readability */
+  --track-heading: -0.01em;        /* section titles and card titles, Anton, 28 to 95px */
+  --track-body: 0;                 /* DM Sans body, 16 to 18px (never letter-space lowercase body text) */
+  --track-lead: -0.005em;          /* DM Sans intro lines, 20 to 28px */
+  --track-label: 0.06em;           /* stickers, status chips, tool pills, captions, uppercase, 11 to 14px */
+  --track-button: 0.04em;          /* buttons and nav links, 14 to 16px, semi-bold */
+  --body-weight: 500;
+
+  /* Motion & Timing Tokens
+     Energetic like a poster slapped on a wall, but controlled and fast */
+  --ease-out: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 150ms;               /* hover */
+  --dur-base: 300ms;               /* cards, buttons */
+  --dur-slow: 600ms;               /* section reveals */
+
+  /* Base Tokens (Light - Screenprint on Cream Poster Paper) */
+  --color-base: #FFF8EC;
+  --color-paper: #FFF8EC;
+  --color-ink: #111111;
+  --color-muted: #55514B;
+  --color-surface: #FFFFFF;
+  --color-border: #111111;
+
+  /* Pop Colours */
+  --color-pink: #FF3D81;
+  --color-blue: #2F5BFF;
+  --color-yellow: #FFD60A;
+  --color-mint: #3DDC97;
+  --color-tangerine: #FF7A1A;
+
+  /* Section Backgrounds (Light mode full fills) */
+  --sec-hero-bg: #FFD60A;
+  --sec-hero-headline: #111111;
+  --sec-hero-text: #111111;
+  --sec-hero-muted: rgba(17, 17, 17, 0.8);
+  --sec-hero-halftone: rgba(17, 17, 17, 0.08);
+
+  --sec-pkg-bg: #FF3D81;
+  --sec-pkg-headline: #111111;
+  --sec-pkg-text: #111111;
+  --sec-pkg-muted: rgba(17, 17, 17, 0.85);
+  --sec-pkg-halftone: rgba(17, 17, 17, 0.08);
+  --sec-pkg-glow: rgba(255, 61, 129, 0.25);
+
+  --sec-creatives-bg: #3DDC97;
+  --sec-creatives-headline: #111111;
+  --sec-creatives-text: #111111;
+  --sec-creatives-muted: rgba(17, 17, 17, 0.85);
+  --sec-creatives-halftone: rgba(17, 17, 17, 0.08);
+  --sec-creatives-glow: rgba(61, 220, 151, 0.25);
+
+  --sec-software-bg: #FF7A1A;
+  --sec-software-headline: #111111;
+  --sec-software-text: #111111;
+  --sec-software-muted: rgba(17, 17, 17, 0.85);
+  --sec-software-halftone: rgba(17, 17, 17, 0.08);
+  --sec-software-glow: rgba(255, 122, 26, 0.25);
+
+  --sec-arsenal-bg: #FFF8EC;
+  --sec-arsenal-headline: #111111;
+  --sec-arsenal-text: #111111;
+  --sec-arsenal-muted: rgba(17, 17, 17, 0.8);
+  --sec-arsenal-halftone: rgba(17, 17, 17, 0.08);
+
+  --sec-contact-bg: #111111;
+  --sec-contact-headline: #FFD60A;
+  --sec-contact-text: #FFF8EC;
+  --sec-contact-muted: rgba(255, 248, 236, 0.75);
+  --sec-contact-halftone: rgba(255, 214, 10, 0.08);
+
+  --sec-footer-bg: #111111;
+  --sec-footer-text: #FFF8EC;
+  --sec-footer-border: #111111;
+
+  --card-bg: #FFF8EC;
+  --card-border: #111111;
+  --card-text: #111111;
+  --card-muted: rgba(17, 17, 17, 0.75);
+
+  --nav-bg-scrolled: rgba(255, 248, 236, 0.95);
+  --nav-border: #111111;
+}
+
+/* -------------------------------------------------------------
+   DARK MODE TOKENS (POSTER WALL AFTER DARK)
+   Defined under [data-theme="dark"] and prefers-color-scheme
+   ------------------------------------------------------------- */
+[data-theme="dark"] {
+  color-scheme: dark;
+
+  /* Dark mode type optical adjustments:
+     Light text on dark looks bolder and tighter, so add +0.01em to body and label tracking.
+     Use font-weight 400 (not 500) for body. */
+  --track-body: 0.01em;
+  --track-lead: 0.005em;
+  --track-label: 0.07em;
+  --body-weight: 400;
+
+  /* Base Tokens: base #0F0E0C (never pure #000), text #FFF8EC, muted text #C9BFAE */
+  --color-base: #0F0E0C;
+  --color-paper: #0F0E0C;
+  --color-ink: #FFF8EC;
+  --color-muted: #C9BFAE;
+  --color-surface: #1A1815;
+  --color-border: #2E2A24;
+
+  /* Pop Colours */
+  --color-pink: #FF3D81;
+  --color-blue: #6F8CFF;
+  --color-yellow: #FFD60A;
+  --color-mint: #3DDC97;
+  --color-tangerine: #FF7A1A;
+
+  /* Section Backgrounds */
+  --sec-hero-bg: #1A1700;
+  --sec-hero-headline: #FFD60A;
+  --sec-hero-text: #FFF8EC;
+  --sec-hero-muted: #C9BFAE;
+  --sec-hero-halftone: rgba(255, 214, 10, 0.10);
+
+  --sec-pkg-bg: #1F0E15;
+  --sec-pkg-headline: #FF3D81;
+  --sec-pkg-text: #FFF8EC;
+  --sec-pkg-muted: #C9BFAE;
+  --sec-pkg-halftone: rgba(255, 61, 129, 0.10);
+  --sec-pkg-glow: rgba(255, 61, 129, 0.25);
+
+  --sec-creatives-bg: #0B1D15;
+  --sec-creatives-headline: #3DDC97;
+  --sec-creatives-text: #FFF8EC;
+  --sec-creatives-muted: #C9BFAE;
+  --sec-creatives-halftone: rgba(61, 220, 151, 0.10);
+  --sec-creatives-glow: rgba(61, 220, 151, 0.25);
+
+  --sec-software-bg: #22120A;
+  --sec-software-headline: #FF7A1A;
+  --sec-software-text: #FFF8EC;
+  --sec-software-muted: #C9BFAE;
+  --sec-software-halftone: rgba(255, 122, 26, 0.10);
+  --sec-software-glow: rgba(255, 122, 26, 0.25);
+
+  --sec-arsenal-bg: #14120F;
+  --sec-arsenal-headline: #3DDC97;
+  --sec-arsenal-text: #FFF8EC;
+  --sec-arsenal-muted: #C9BFAE;
+  --sec-arsenal-halftone: rgba(61, 220, 151, 0.08);
+
+  --sec-contact-bg: #0A0A09;
+  --sec-contact-headline: #FFD60A;
+  --sec-contact-text: #FFF8EC;
+  --sec-contact-muted: #C9BFAE;
+  --sec-contact-halftone: rgba(255, 214, 10, 0.08);
+
+  --sec-footer-bg: #0A0A09;
+  --sec-footer-text: #FFF8EC;
+  --sec-footer-border: #2E2A24;
+
+  --card-bg: #1A1815;
+  --card-border: #2E2A24;
+  --card-text: #FFF8EC;
+  --card-muted: #C9BFAE;
+
+  --nav-bg-scrolled: rgba(15, 14, 12, 0.95);
+  --nav-border: #2E2A24;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    color-scheme: dark;
+
+    --track-body: 0.01em;
+    --track-lead: 0.005em;
+    --track-label: 0.07em;
+    --body-weight: 400;
+
+    --color-base: #0F0E0C;
+    --color-paper: #0F0E0C;
+    --color-ink: #FFF8EC;
+    --color-muted: #C9BFAE;
+    --color-surface: #1A1815;
+    --color-border: #2E2A24;
+
+    --color-pink: #FF3D81;
+    --color-blue: #6F8CFF;
+    --color-yellow: #FFD60A;
+    --color-mint: #3DDC97;
+    --color-tangerine: #FF7A1A;
+
+    --sec-hero-bg: #1A1700;
+    --sec-hero-headline: #FFD60A;
+    --sec-hero-text: #FFF8EC;
+    --sec-hero-muted: #C9BFAE;
+    --sec-hero-halftone: rgba(255, 214, 10, 0.10);
+
+    --sec-pkg-bg: #1F0E15;
+    --sec-pkg-headline: #FF3D81;
+    --sec-pkg-text: #FFF8EC;
+    --sec-pkg-muted: #C9BFAE;
+    --sec-pkg-halftone: rgba(255, 61, 129, 0.10);
+    --sec-pkg-glow: rgba(255, 61, 129, 0.25);
+
+    --sec-creatives-bg: #0B1D15;
+    --sec-creatives-headline: #3DDC97;
+    --sec-creatives-text: #FFF8EC;
+    --sec-creatives-muted: #C9BFAE;
+    --sec-creatives-halftone: rgba(61, 220, 151, 0.10);
+    --sec-creatives-glow: rgba(61, 220, 151, 0.25);
+
+    --sec-software-bg: #22120A;
+    --sec-software-headline: #FF7A1A;
+    --sec-software-text: #FFF8EC;
+    --sec-software-muted: #C9BFAE;
+    --sec-software-halftone: rgba(255, 122, 26, 0.10);
+    --sec-software-glow: rgba(255, 122, 26, 0.25);
+
+    --sec-arsenal-bg: #14120F;
+    --sec-arsenal-headline: #3DDC97;
+    --sec-arsenal-text: #FFF8EC;
+    --sec-arsenal-muted: #C9BFAE;
+    --sec-arsenal-halftone: rgba(61, 220, 151, 0.08);
+
+    --sec-contact-bg: #0A0A09;
+    --sec-contact-headline: #FFD60A;
+    --sec-contact-text: #FFF8EC;
+    --sec-contact-muted: #C9BFAE;
+    --sec-contact-halftone: rgba(255, 214, 10, 0.08);
+
+    --sec-footer-bg: #0A0A09;
+    --sec-footer-text: #FFF8EC;
+    --sec-footer-border: #2E2A24;
+
+    --card-bg: #1A1815;
+    --card-border: #2E2A24;
+    --card-text: #FFF8EC;
+    --card-muted: #C9BFAE;
+
+    --nav-bg-scrolled: rgba(15, 14, 12, 0.95);
+    --nav-border: #2E2A24;
+  }
+}
+
+/* -------------------------------------------------------------
+   BASE STYLES, TYPE SETTINGS & COLOR TRANSITIONS
+   ------------------------------------------------------------- */
+@layer base {
+  *, *::before, *::after {
+    box-sizing: border-box;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    text-size-adjust: 100%;
+    background-color: var(--color-base);
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  body {
+    background-color: var(--color-base);
+    color: var(--color-ink);
+    font-family: var(--font-body);
+    font-weight: var(--body-weight, 500);
+    letter-spacing: var(--track-body);
+    line-height: 1.6;
+    overflow-x: hidden;
+    margin: 0;
+    padding: 0;
+    font-kerning: normal;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    font-feature-settings: "kern" 1, "liga" 1;
+  }
+
+  /* Body paragraphs: var(--track-body), line-height 1.6, max-width 65ch, left-aligned, never justified */
+  p {
+    letter-spacing: var(--track-body);
+    line-height: 1.6;
+    max-width: 65ch;
+    text-align: left;
+    text-wrap: pretty;
+  }
+
+  h1, h2, h3, h4, h5, h6 {
+    text-wrap: balance;
+  }
+
+  /* 200ms transition on background-color and color only */
+  html,
+  body,
+  section,
+  header,
+  footer,
+  nav,
+  article,
+  aside,
+  main {
+    transition: background-color 200ms ease, color 200ms ease, border-color 200ms ease;
+  }
+
+  /* Accessibility focus ring: yellow #FFD60A, 2px, offset 2px in dark mode */
+  :focus-visible {
+    outline: 2px solid #111111;
+    outline-offset: 2px;
+  }
+
+  [data-theme="dark"] :focus-visible {
+    outline: 2px solid #FFD60A;
+    outline-offset: 2px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) :focus-visible {
+      outline: 2px solid #FFD60A;
+      outline-offset: 2px;
+    }
+  }
+}
+
+/* -------------------------------------------------------------
+   TYPOGRAPHY & LETTER-SPACING SCALE
+   ------------------------------------------------------------- */
+.font-headline {
+  font-family: var(--font-headline);
+}
+
+.font-body {
+  font-family: var(--font-body);
+}
+
+.font-mono {
+  font-family: var(--font-mono);
+}
+
+/* Giant Headlines:
+   Anton, uppercase, line-height 0.9 to 0.95, tracking var(--track-display).
+   On mobile use -0.015em so tight tracking doesn't hurt readability.
+   padding-inline: 0.05em prevents letter clipping on crop edges. */
+.headline-giant {
+  font-family: var(--font-headline);
+  font-size: clamp(4rem, 14vw, 13.75rem);
+  line-height: 0.92;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  text-wrap: balance;
+  padding-inline: 0.05em;
+}
+
+@media (max-width: 640px) {
+  .headline-giant {
+    letter-spacing: var(--track-display-mobile);
+  }
+}
+
+/* Section Headlines:
+   Anton, uppercase, line-height 0.92, tracking var(--track-display). */
+.headline-section {
+  font-family: var(--font-headline);
+  font-size: clamp(3rem, 9.5vw, 8.75rem);
+  line-height: 0.92;
+  letter-spacing: var(--track-display);
+  text-transform: uppercase;
+  text-wrap: balance;
+  padding-inline: 0.05em;
+}
+
+@media (max-width: 640px) {
+  .headline-section {
+    letter-spacing: var(--track-display-mobile);
+  }
+}
+
+/* Card Titles:
+   Anton, 28 to 95px, tracking var(--track-heading) (-0.01em). */
+.headline-card {
+  font-family: var(--font-headline);
+  font-size: clamp(1.75rem, 3.8vw, 2.75rem);
+  line-height: 0.95;
+  letter-spacing: var(--track-heading);
+  text-transform: uppercase;
+  text-wrap: balance;
+}
+
+/* Lead text & Section Intro Lines:
+   DM Sans, 20 to 28px, tracking var(--track-lead) (-0.005em). */
+.lead-intro, .text-lead {
+  letter-spacing: var(--track-lead);
+  line-height: 1.45;
+  text-wrap: pretty;
+}
+
+/* Tabular Numbers:
+   Phone numbers, gallery tags, stats: font-variant-numeric: tabular-nums, tracking 0.02em */
+.tabular-nums, .number-tag {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+}
+
+/* Contact Details:
+   Tracking 0.01em, word-break: break-word so long emails never overflow on 360px */
+.contact-email {
+  letter-spacing: 0.01em;
+  word-break: break-word;
+  overflow-wrap: break-word;
+}
+
+.contact-phone {
+  font-variant-numeric: tabular-nums;
+  letter-spacing: 0.02em;
+  word-break: break-word;
+}
+
+/* -------------------------------------------------------------
+   SECTION BACKGROUNDS & POP INK COLOURS
+   ------------------------------------------------------------- */
+.section-hero {
+  background-color: var(--sec-hero-bg);
+  color: var(--sec-hero-text);
+  --sec-halftone: var(--sec-hero-halftone);
+  --sec-card-glow: rgba(255, 214, 10, 0.25);
+}
+
+.section-packaging {
+  background-color: var(--sec-pkg-bg);
+  color: var(--sec-pkg-text);
+  --sec-halftone: var(--sec-pkg-halftone);
+  --sec-card-glow: var(--sec-pkg-glow);
+}
+
+.section-creatives {
+  background-color: var(--sec-creatives-bg);
+  color: var(--sec-creatives-text);
+  --sec-halftone: var(--sec-creatives-halftone);
+  --sec-card-glow: var(--sec-creatives-glow);
+}
+
+.section-software {
+  background-color: var(--sec-software-bg);
+  color: var(--sec-software-text);
+  --sec-halftone: var(--sec-software-halftone);
+  --sec-card-glow: var(--sec-software-glow);
+}
+
+.section-arsenal {
+  background-color: var(--sec-arsenal-bg);
+  color: var(--sec-arsenal-text);
+  --sec-halftone: var(--sec-arsenal-halftone);
+  --sec-card-glow: rgba(61, 220, 151, 0.22);
+}
+
+.section-contact {
+  background-color: var(--sec-contact-bg);
+  color: var(--sec-contact-text);
+  --sec-halftone: var(--sec-contact-halftone);
+  --sec-card-glow: rgba(255, 214, 10, 0.25);
+}
+
+/* -------------------------------------------------------------
+   TEXTURES & EFFECTS
+   - Halftone dots: Section's pop colour at 8-12% opacity
+   - Overprint layers with screen blend mode
+   - Paper-coloured frames (#FFF8EC, 8px padding, small radius)
+   ------------------------------------------------------------- */
+.halftone-overlay {
+  background-image: radial-gradient(var(--sec-halftone, rgba(17, 17, 17, 0.08)) 1.5px, transparent 1.5px);
+  background-size: 12px 12px;
+}
+
+/* Misregistered Overprint Layers:
+   Inherits exact typography from wrapper, uses mix-blend-mode: multiply in light, screen in dark */
+.overprint-pink {
+  color: #FF3D81;
+  mix-blend-mode: multiply;
+  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  pointer-events: none;
+  user-select: none;
+}
+
+.overprint-blue {
+  color: #2F5BFF;
+  mix-blend-mode: multiply;
+  font: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+  letter-spacing: inherit;
+  text-transform: inherit;
+  pointer-events: none;
+  user-select: none;
+}
+
+[data-theme="dark"] .overprint-pink {
+  mix-blend-mode: screen;
+  color: #FF3D81;
+  opacity: 0.9;
+}
+
+[data-theme="dark"] .overprint-blue {
+  mix-blend-mode: screen;
+  color: #6F8CFF;
+  opacity: 0.9;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .overprint-pink {
+    mix-blend-mode: screen;
+    color: #FF3D81;
+    opacity: 0.9;
+  }
+  :root:not([data-theme="light"]) .overprint-blue {
+    mix-blend-mode: screen;
+    color: #6F8CFF;
+    opacity: 0.9;
+  }
+}
+
+/* Mockup & Poster Paper-Coloured Frame:
+   Wrap in #FFF8EC, 8px padding, small radius so white mockups don't glare */
+.mockup-frame {
+  position: relative;
+  width: 100%;
+  overflow: hidden;
+  transition: padding 200ms ease, background-color 200ms ease;
+}
+
+[data-theme="dark"] .mockup-frame {
+  background-color: #FFF8EC;
+  padding: 8px;
+  border-radius: 8px;
+}
+
+[data-theme="dark"] .mockup-frame img,
+[data-theme="dark"] img.framed-mockup {
+  border-radius: 4px;
+  filter: brightness(0.95);
+  transition: filter 200ms ease;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .mockup-frame {
+    background-color: #FFF8EC;
+    padding: 8px;
+    border-radius: 8px;
+  }
+  :root:not([data-theme="light"]) .mockup-frame img,
+  :root:not([data-theme="light"]) img.framed-mockup {
+    border-radius: 4px;
+    filter: brightness(0.95);
+  }
+}
+
+/* -------------------------------------------------------------
+   STICKERS, BUTTONS & CARDS
+   - Stickers: uppercase, var(--track-label), font-weight 700
+   - Buttons & nav links: var(--track-button), no text wrapping
+   - Primary button = yellow fill, ink text
+   - Secondary button = outlined #FFF8EC
+   - Box shadows replaced by 1px borders (#2E2A24) and subtle glow on hover
+   ------------------------------------------------------------- */
+.sticker-badge {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--font-mono);
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-label);
+  padding: 0.35rem 0.85rem;
+  border-radius: 4px;
+  border: 2px solid #111111;
+  background-color: #FFD60A;
+  color: #111111 !important;
+  box-shadow: 2px 2px 0px #111111;
+  user-select: none;
+  white-space: nowrap;
+}
+
+[data-theme="dark"] .sticker-badge {
+  border: 1.5px solid #111111;
+  box-shadow: 1.5px 1.5px 0px rgba(0, 0, 0, 0.4);
+}
+
+/* Primary Button: Yellow fill, ink text, var(--track-button), no text wrapping */
+.btn-primary {
+  min-height: 48px;
+  padding: 0.75rem 1.75rem;
+  background-color: #FFD60A;
+  color: #111111 !important;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-button);
+  white-space: nowrap;
+  border-radius: 6px;
+  border: 2.5px solid #111111;
+  box-shadow: 3px 3px 0px #111111;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease;
+}
+
+@media (hover: hover) {
+  .btn-primary:hover {
+    background-color: #3DDC97;
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px #111111;
+  }
+
+  [data-theme="dark"] .btn-primary:hover {
+    box-shadow: 0 0 16px rgba(255, 214, 10, 0.4);
+  }
+}
+
+[data-theme="dark"] .btn-primary {
+  border-color: #111111;
+  box-shadow: 2px 2px 0px rgba(0, 0, 0, 0.5);
+}
+
+/* Secondary Button: Outlined #111111 in light, #FFF8EC in dark, var(--track-button), no text wrapping */
+.btn-secondary {
+  min-height: 48px;
+  padding: 0.75rem 1.75rem;
+  background-color: transparent;
+  color: #111111;
+  font-family: var(--font-mono);
+  font-size: 0.875rem;
+  font-weight: 700;
+  text-transform: uppercase;
+  letter-spacing: var(--track-button);
+  white-space: nowrap;
+  border-radius: 6px;
+  border: 2.5px solid #111111;
+  box-shadow: 3px 3px 0px #111111;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  cursor: pointer;
+  transition: transform 150ms ease, box-shadow 150ms ease, background-color 150ms ease, color 150ms ease;
+}
+
+@media (hover: hover) {
+  .btn-secondary:hover {
+    background-color: #111111;
+    color: #FFD60A;
+    transform: translate(1px, 1px);
+    box-shadow: 2px 2px 0px #111111;
+  }
+
+  [data-theme="dark"] .btn-secondary:hover {
+    background-color: #FFF8EC !important;
+    color: #0F0E0C !important;
+    box-shadow: 0 0 20px rgba(255, 248, 236, 0.3) !important;
+  }
+}
+
+[data-theme="dark"] .btn-secondary {
+  color: #FFF8EC !important;
+  border: 2px solid #FFF8EC !important;
+  box-shadow: none !important;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .btn-secondary {
+    color: #FFF8EC !important;
+    border: 2px solid #FFF8EC !important;
+    box-shadow: none !important;
+  }
+  @media (hover: hover) {
+    :root:not([data-theme="light"]) .btn-secondary:hover {
+      background-color: #FFF8EC !important;
+      color: #0F0E0C !important;
+      box-shadow: 0 0 20px rgba(255, 248, 236, 0.3) !important;
+    }
+  }
+}
+
+/* Nav links: var(--track-button), no text wrapping */
+.nav-link-track {
+  letter-spacing: var(--track-button);
+  white-space: nowrap;
+}
+
+/* -------------------------------------------------------------
+   CARD STYLES & HOVER GLOW
+   ------------------------------------------------------------- */
+.poster-card {
+  background-color: var(--card-bg);
+  border: 3px solid var(--card-border);
+  box-shadow: 5px 5px 0px #111111;
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1), box-shadow 0.3s ease, border-color 0.2s ease;
+}
+
+@media (hover: hover) {
+  .poster-card:hover {
+    box-shadow: 8px 8px 0px #111111;
+  }
+}
+
+[data-theme="dark"] .poster-card,
+[data-theme="dark"] .dark-card {
+  background-color: #1A1815 !important;
+  border-width: 1px !important;
+  border-color: #2E2A24 !important;
+  box-shadow: none !important;
+}
+
+@media (hover: hover) {
+  [data-theme="dark"] .poster-card:hover,
+  [data-theme="dark"] .dark-card:hover {
+    border-color: #3E3830 !important;
+    box-shadow: 0 0 24px var(--sec-card-glow, rgba(255, 214, 10, 0.25)) !important;
+  }
+}
+
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) .poster-card,
+  :root:not([data-theme="light"]) .dark-card {
+    background-color: #1A1815 !important;
+    border-width: 1px !important;
+    border-color: #2E2A24 !important;
+    box-shadow: none !important;
+  }
+  @media (hover: hover) {
+    :root:not([data-theme="light"]) .poster-card:hover,
+    :root:not([data-theme="light"]) .dark-card:hover {
+      border-color: #3E3830 !important;
+      box-shadow: 0 0 24px var(--sec-card-glow, rgba(255, 214, 10, 0.25)) !important;
+    }
+  }
+}
+
+/* Chip Wiggle on Hover: rotate -3deg, +3deg, 0 over 400ms */
+@keyframes chipWiggle {
+  0% { transform: rotate(0deg); }
+  25% { transform: rotate(-3deg); }
+  75% { transform: rotate(3deg); }
+  100% { transform: rotate(0deg); }
+}
+
+@media (hover: hover) {
+  .hover-chip-wiggle:hover {
+    animation: chipWiggle 400ms ease-in-out;
+  }
+}
+
+/* Sticker continuous slow wobble loop (6s, +/-3deg) */
+@keyframes stickerWobble {
+  0%, 100% { transform: rotate(-3deg); }
+  50% { transform: rotate(3deg); }
+}
+
+.animate-sticker-wobble {
+  animation: stickerWobble 6s ease-in-out infinite;
+}
+
+/* Quick jump on hover for stickers */
+.sticker-badge {
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .sticker-badge:hover {
+    transform: translateY(-4px) scale(1.05) !important;
+  }
+}
+
+/* Error Shake: translateX +/-6px x3 */
+@keyframes errorShake {
+  0%, 100% { transform: translateX(0); }
+  15%, 45%, 75% { transform: translateX(-6px); }
+  30%, 60%, 90% { transform: translateX(6px); }
+}
+
+.animate-error-shake {
+  animation: errorShake 400ms cubic-bezier(0.36, 0.07, 0.19, 0.97) both;
+}
+
+/* Checkmark draw animation with stroke-dashoffset */
+@keyframes checkmarkDraw {
+  0% { stroke-dashoffset: 24; }
+  100% { stroke-dashoffset: 0; }
+}
+
+.animate-checkmark-draw {
+  stroke-dasharray: 24;
+  stroke-dashoffset: 24;
+  animation: checkmarkDraw 500ms cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+/* Focus-visible ring scale-in */
+@keyframes focusRingIn {
+  from { outline-offset: 6px; opacity: 0; }
+  to { outline-offset: 2px; opacity: 1; }
+}
+
+:focus-visible {
+  outline: 2px solid #111111;
+  outline-offset: 2px;
+  animation: focusRingIn 150ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+[data-theme="dark"] :focus-visible {
+  outline: 2px solid #FFD60A;
+  outline-offset: 2px;
+}
+
+/* Button slide-fill: Pop-colour layer wipes in from left on hover (300ms) */
+.btn-slide-fill {
+  position: relative;
+  overflow: hidden;
+  z-index: 1;
+  transition: transform 150ms cubic-bezier(0.22, 1, 0.36, 1), box-shadow 150ms ease;
+}
+
+.btn-slide-fill::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  background-color: var(--slide-fill, #3DDC97);
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 300ms cubic-bezier(0.22, 1, 0.36, 1);
+  z-index: -1;
+}
+
+@media (hover: hover) {
+  .btn-slide-fill:hover::before {
+    transform: scaleX(1);
+  }
+}
+
+.btn-slide-fill:active {
+  transform: scale(0.96) !important;
+  transition-duration: 100ms;
+}
+
+/* Nav Link Underline: draws left to right on hover (scaleX 0 to 1, origin left, 200ms) */
+.nav-underline-link {
+  position: relative;
+}
+
+.nav-underline-link::after {
+  content: '';
+  position: absolute;
+  bottom: 0px;
+  left: 0;
+  right: 0;
+  height: 2.5px;
+  background-color: currentColor;
+  transform: scaleX(0);
+  transform-origin: left;
+  transition: transform 200ms cubic-bezier(0.22, 1, 0.36, 1);
+}
+
+@media (hover: hover) {
+  .nav-underline-link:hover::after {
+    transform: scaleX(1);
+  }
+}
+
+/* Hide custom cursor by default on touch / coarse devices */
+@media (hover: none), (pointer: coarse) {
+  .custom-cursor-layer {
+    display: none !important;
+  }
+}
+
+/* Prefers Reduced Motion: disable all animations, loops, transitions and cursor */
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+  .custom-cursor-layer {
+    display: none !important;
+  }
+  .animate-sticker-wobble {
+    animation: none !important;
+  }
+}
