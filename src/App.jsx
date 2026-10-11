@@ -61,7 +61,7 @@ export default function App() {
   }, []);
 
   // Check OS reduce motion setting, log to dev console, and track for debug badge
-  const [reduceMotionActive, setReduceMotionActive] = useState(() => {
+  const [_reduceMotionActive, setReduceMotionActive] = useState(() => {
     if (typeof window !== 'undefined' && window.matchMedia) {
       return window.matchMedia('(prefers-reduced-motion: reduce)').matches;
     }

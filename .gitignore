@@ -19,6 +19,8 @@ temp_*
 canva_extracted
 *_extracted
 *.zip
+.chrome*
+scratch/
 
 # Editor directories and files
 .vscode/*

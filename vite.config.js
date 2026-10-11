@@ -71,6 +71,12 @@ export default defineConfig(({ mode }) => {
     server: {
       watch: {
         ignored: [
+          /[\\/]\.chrome.*[\\/]/,
+          /[\\/]scratch[\\/]/,
+          /[\\/]temp_.*[\\/]/,
+          /[\\/].*_extracted[\\/]/,
+          '**/.chrome*/**',
+          '**/scratch/**',
           '**/canva_extracted/**',
           '**/*_extracted/**',
           '**/temp_assets/**',
