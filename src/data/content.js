@@ -195,8 +195,8 @@ export const portfolioContent = {
         category: "Web Creatives & Social Kit",
         format: "Multi-Platform Digital Kit",
         image: "/work/poster-gathex-keynote.webp",
-        width: 800,
-        height: 950,
+        width: 768,
+        height: 1024,
         details: "Geometric, punchy banner system and digital ad kit built for a high-converting software product announcement.",
       },
       {
