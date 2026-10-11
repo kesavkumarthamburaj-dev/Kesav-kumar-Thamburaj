@@ -20,20 +20,21 @@ export const TOOL_LOGOS = [
 ];
 
 export const motionConfig = {
-  // 1. Hero 3D Orbit Settings
+  // 1. Hero 3D Orbit Settings (wraps around head & shoulders)
   orbit: {
     durationSec: 24, // 360deg every 24s
     ringTiltDeg: 65, // Ring tilted ~65deg
-    planeRotateDeg: -16, // Visual 2D slant of orbit plane
-    rxPercentDesktop: 46, // rx = 46% of container width
-    rxPercentMobile: 44, // rx = 44% on mobile
-    ryPercent: 18, // ry = 18% of container height
+    planeRotateDeg: -15, // Visual 2D slant of orbit plane
+    centerYPercent: 38, // Centered around head and shoulders (38% from top)
+    rxPercentDesktop: 42, // rx = 42% of container width (wraps wide around shoulders)
+    rxPercentMobile: 41, // rx = 41% on mobile
+    ryPercent: 16, // ry = 16% of container height (passes behind neck / in front of chest)
     tileCountDesktop: 14,
     tileCountMobile: 8,
     tileSizePx: 48,
-    farScale: 0.7, // Depth < 0 (behind photo)
-    nearScale: 1.15, // Depth > 0 (in front of photo)
-    farOpacity: 0.6,
+    farScale: 0.75, // Depth < 0 (36px far, behind head)
+    nearScale: 1.25, // Depth > 0 (60px near, in front of chest)
+    farOpacity: 0.60,
     nearOpacity: 1.0,
     farBlurPx: 1.2,
     maxTiltParallaxDeg: 8, // Pointer tilt parallax (desktop)

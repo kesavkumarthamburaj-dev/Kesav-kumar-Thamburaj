@@ -131,6 +131,7 @@ export default function App() {
         <TornEdge
           color={isDark ? '#1F0E15' : '#FF3D81'}
           bgColor={isDark ? '#1A1700' : '#FFD60A'}
+          className="-mt-6 sm:-mt-8 md:-mt-12 relative z-20"
         />
 
         {/* 2. PACKAGING (Pink: #FF3D81 light, #1F0E15 dark) */}

@@ -2,12 +2,15 @@ import React, { useRef, useEffect, useState, useMemo } from 'react';
 import { motionConfig, TOOL_LOGOS } from '../data/motion.config';
 
 /**
- * HeroOrbit: 3D planetary orbit around Kesav's photo cutout.
- * Calculates true depth per frame in a single requestAnimationFrame loop.
- * Tiles on far half (depth < 0) render BEHIND photo (z-index 10, scale 0.7, opacity 0.6, blur).
- * Photo renders at z-index 20.
- * Tiles on near half (depth >= 0) render IN FRONT of photo (z-index 30, scale 1.15, opacity 1.0, sharp).
- * Hover / touch scales tile to 1.35 at z-index 50 and pauses orbit.
+ * HeroOrbit: Enlarged 3D planetary orbit wrapping around Kesav's head and shoulders.
+ * Features:
+ * - 2x resolution WebP cutout (/kesav.webp) with 2px paper sticker edge silhouette
+ * - Bottom anchored (bottom: 0) with 12% soft linear gradient fade mask
+ * - Screenprint poster backdrop: 70% flat pop circle with halftone dots + 10px misregistered pink circle
+ * - Dark mode subtle radial ground glow (25% opacity)
+ * - Tilted ~65deg orbit ring wrapping head & shoulders: far tiles behind neck (z-10, 36px),
+ *   near tiles in front of chest (z-30, 60px)
+ * - Single rAF loop, IntersectionObserver pause, prefers-reduced-motion static fallback
  */
 export default function HeroOrbit({ isDark, shouldReduceMotion }) {
   const containerRef = useRef(null);
@@ -33,7 +36,7 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
   // Filter tools: 14 tools on desktop, 8 tools on mobile
   const activeTools = useMemo(() => {
     if (isMobile) {
-      // Pick 8 representative tools across packaging, design, video, and AI
+      // 8 representative tools across packaging, design, video, and AI
       return [
         TOOL_LOGOS[0], // Affinity
         TOOL_LOGOS[1], // Photoshop
@@ -74,9 +77,9 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
       // Static display for prefers-reduced-motion
       if (containerRef.current) {
         const rect = containerRef.current.getBoundingClientRect();
-        const W = rect.width || 420;
-        const rx = W * (isMobile ? 0.44 : 0.46);
-        const ry = W * 0.18;
+        const W = rect.width || 500;
+        const rx = W * ((isMobile ? motionConfig.orbit.rxPercentMobile : motionConfig.orbit.rxPercentDesktop) / 100);
+        const ry = W * (motionConfig.orbit.ryPercent / 100);
         const planeRad = (motionConfig.orbit.planeRotateDeg * Math.PI) / 180;
         const cosP = Math.cos(planeRad);
         const sinP = Math.sin(planeRad);
@@ -93,7 +96,7 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
           const depth = Math.sin(a);
           const isNear = depth >= 0;
 
-          el.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0px) scale(${isNear ? 1.05 : 0.75})`;
+          el.style.transform = `translate3d(${px.toFixed(1)}px, ${py.toFixed(1)}px, 0px) scale(${isNear ? 1.25 : 0.75})`;
           el.style.zIndex = isNear ? '30' : '10';
           el.style.opacity = isNear ? '1.0' : '0.65';
           el.style.filter = 'none';
@@ -160,7 +163,7 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
         }
 
         const elapsed = now - startTime;
-        const W = containerRef.current?.offsetWidth || 420;
+        const W = containerRef.current?.offsetWidth || 500;
         const rx = W * ((isMobile ? rxPercentMobile : rxPercentDesktop) / 100);
         const ry = W * (ryPercent / 100);
 
@@ -176,10 +179,9 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
           const el = tilesRef.current[i];
           if (!el) continue;
 
-          // Entrance animation: fly in from center (0,0) with 60ms stagger
+          // Entrance animation: fly in from orbit center with 60ms stagger
           const tileStartTime = i * entranceStaggerMs;
           const entranceProgress = Math.min(1, Math.max(0, (elapsed - tileStartTime) / 450));
-          // Cubic ease-out
           const radiusFactor = 1 - Math.pow(1 - entranceProgress, 3);
 
           const a = currentAngle + (i * 2 * Math.PI) / count;
@@ -201,18 +203,18 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
           let blur;
 
           if (isHovered) {
-            scale = 1.35;
+            scale = 1.45;
             opacity = 1.0;
             zIndex = 50;
             blur = 0;
           } else if (isNear) {
-            // Near half: passes IN FRONT of photo (z-index 30, scale 1.15, full opacity, sharp)
+            // Near half: passes IN FRONT of chest (z-index 30, scale 1.25 = ~60px, full opacity, sharp)
             scale = nearScale - (nearScale - 1.0) * (1 - depth);
             opacity = nearOpacity;
             zIndex = 30; // Strictly in front of photo (z-20)
             blur = baseSpeedBlur * (1 - depth * 0.4); // Sharpest at peak foreground
           } else {
-            // Far half: passes BEHIND photo (z-index 10, scale 0.7, opacity 0.6, blurred)
+            // Far half: passes BEHIND neck & head (z-index 10, scale 0.75 = ~36px, opacity 0.60, blurred)
             const normalizedFar = (depth + 1); // 0 to 1
             scale = farScale + (1.0 - farScale) * normalizedFar;
             opacity = farOpacity + (nearOpacity - farOpacity) * normalizedFar * 0.7;
@@ -256,35 +258,87 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
       ref={containerRef}
       onPointerMove={handlePointerMove}
       onPointerLeave={handlePointerLeave}
-      className="relative w-full max-w-[420px] sm:max-w-[460px] lg:max-w-[490px] xl:max-w-[520px] aspect-[4/5] mx-auto select-none"
+      className="relative w-full h-full aspect-square select-none flex items-end justify-center"
       style={{
         perspective: '1200px',
       }}
     >
-      {/* Planetary Orbit Elliptical Ring Visual Guide (Tilted ~65deg screen-print dashed trace) */}
+      {/* 1. Subtle Dark Mode Ground Glow under Photo (25% opacity) */}
+      {isDark && (
+        <div
+          className="absolute bottom-0 left-1/2 -translate-x-1/2 w-full h-[45%] pointer-events-none z-[3]"
+          style={{
+            background: 'radial-gradient(ellipse at bottom, rgba(255, 214, 10, 0.25) 0%, transparent 70%)',
+          }}
+          aria-hidden="true"
+        />
+      )}
+
+      {/* 2. Poster Backdrop: Misregistered Pink Circle (offset 10px in pink at 60% opacity) */}
       <div
-        className="absolute top-1/2 left-1/2 w-[92%] h-[36%] rounded-[50%] pointer-events-none transition-transform duration-300 z-[12]"
+        className="absolute rounded-full pointer-events-none transition-transform duration-300 z-[4]"
         style={{
+          width: '70%',
+          height: '70%',
+          top: `${motionConfig.orbit.centerYPercent}%`,
+          left: '50%',
+          transform: 'translate(calc(-50% + 10px), calc(-50% + 10px))',
+          backgroundColor: '#FF3D81',
+          opacity: 0.60,
+        }}
+        aria-hidden="true"
+      />
+
+      {/* 3. Poster Backdrop: Large Flat Circle (70% height, pop yellow in light, #2A2500 in dark, with halftone dot overlay) */}
+      <div
+        className="absolute rounded-full pointer-events-none transition-colors duration-300 z-[5] overflow-hidden"
+        style={{
+          width: '70%',
+          height: '70%',
+          top: `${motionConfig.orbit.centerYPercent}%`,
+          left: '50%',
+          transform: 'translate(-50%, -50%)',
+          backgroundColor: isDark ? '#2A2500' : '#FFD60A',
+          border: isDark ? '2px solid rgba(255, 214, 10, 0.35)' : '3px solid #111111',
+          boxShadow: isDark
+            ? '0 0 48px rgba(255, 214, 10, 0.16)'
+            : '4px 4px 0px #111111',
+        }}
+        aria-hidden="true"
+      >
+        {/* Halftone dot pattern overlay inside backdrop circle */}
+        <div
+          className="absolute inset-0 opacity-35 pointer-events-none"
+          style={{
+            backgroundImage: isDark
+              ? 'radial-gradient(rgba(255, 214, 10, 0.4) 1.5px, transparent 1.5px)'
+              : 'radial-gradient(rgba(17, 17, 17, 0.32) 1.5px, transparent 1.5px)',
+            backgroundSize: '12px 12px',
+          }}
+          aria-hidden="true"
+        />
+      </div>
+
+      {/* 4. Planetary Orbit Elliptical Ring Visual Guide (Tilted ~65deg dashed trace wrapping head & shoulders) */}
+      <div
+        className="absolute rounded-[50%] pointer-events-none transition-transform duration-300 z-[12]"
+        style={{
+          width: '84%',
+          height: '32%',
+          top: `${motionConfig.orbit.centerYPercent}%`,
+          left: '50%',
           transform: `translate(-50%, -50%) rotate(${motionConfig.orbit.planeRotateDeg}deg) rotateY(${pointerTilt.y * 0.7}deg) rotateX(${pointerTilt.x * 0.7}deg)`,
           border: isDark
-            ? '1.5px dashed rgba(255, 214, 10, 0.32)'
-            : '2px dashed rgba(17, 17, 17, 0.22)',
+            ? '1.5px dashed rgba(255, 214, 10, 0.40)'
+            : '2px dashed rgba(17, 17, 17, 0.28)',
           boxShadow: isDark
-            ? '0 0 24px rgba(255, 214, 10, 0.12), inset 0 0 20px rgba(255, 214, 10, 0.06)'
+            ? '0 0 24px rgba(255, 214, 10, 0.15), inset 0 0 20px rgba(255, 214, 10, 0.08)'
             : 'none',
         }}
         aria-hidden="true"
       />
 
-      {/* Decorative Radial Backdrop Aura behind Kesav */}
-      <div
-        className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 sm:w-80 lg:w-96 h-64 sm:h-80 lg:h-96 rounded-full pointer-events-none blur-3xl z-[5] transition-opacity ${
-          isDark ? 'bg-yellow/15 opacity-80' : 'bg-yellow/30 opacity-70'
-        }`}
-        aria-hidden="true"
-      />
-
-      {/* Central Portrait Cutout: Kesav Kumar T (z-index 20) */}
+      {/* 5. Central Portrait Cutout: Kesav Kumar T (z-index 20, 2x WebP, bottom-anchored, 2px sticker edge, bottom fade mask) */}
       <div
         className="absolute inset-0 flex items-end justify-center pointer-events-none z-[20]"
         style={{
@@ -292,24 +346,30 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
             ? `rotateX(${pointerTilt.x * 0.4}deg) rotateY(${pointerTilt.y * 0.4}deg)`
             : 'none',
           transition: 'transform 0.15s ease-out',
+          maskImage: 'linear-gradient(to bottom, #000 88%, transparent 100%)',
+          WebkitMaskImage: 'linear-gradient(to bottom, #000 88%, transparent 100%)',
         }}
       >
         <img
-          src="/kesav.png"
+          src="/kesav.webp"
           alt="Kesav Kumar T — Packaging Designer &amp; Software Founder"
-          width={512}
-          height={512}
+          width={1600}
+          height={1600}
+          fetchPriority="high"
           decoding="async"
           loading="eager"
-          className="w-auto h-[88%] sm:h-[92%] lg:h-[96%] max-w-full object-contain object-bottom pointer-events-none select-none drop-shadow-[0_18px_36px_rgba(0,0,0,0.48)]"
+          className="w-auto h-full max-w-full object-contain object-bottom pointer-events-none select-none"
+          style={{
+            filter: 'drop-shadow(2px 0 0 #FFF8EC) drop-shadow(-2px 0 0 #FFF8EC) drop-shadow(0 2px 0 #FFF8EC) drop-shadow(0 -2px 0 #FFF8EC) drop-shadow(0 16px 32px rgba(0,0,0,0.45))',
+          }}
         />
       </div>
 
       {/* 
-        Orbiting Logo Tiles: Direct children of containerRef so z-index sorting is true & direct!
-        Far tiles: z-10 (behind photo z-20)
-        Near tiles: z-30 (in front of photo z-20)
-        Hovered tile: z-50
+        6. Orbiting Logo Tiles: Direct children of containerRef centered at (50%, centerYPercent).
+        Far tiles: z-10 (behind neck & head z-20, scale 0.75 = ~36px)
+        Near tiles: z-30 (in front of chest z-20, scale 1.25 = ~60px)
+        Hovered tile: z-50 (scale 1.45 = ~70px)
       */}
       {activeTools.map((tool, idx) => (
         <div
@@ -329,7 +389,7 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
           style={{
             width: '48px',
             height: '48px',
-            top: 'calc(50% - 24px)',
+            top: `calc(${motionConfig.orbit.centerYPercent}% - 24px)`,
             left: 'calc(50% - 24px)',
             willChange: 'transform, opacity, filter',
           }}
@@ -344,10 +404,10 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
             className="w-6.5 h-6.5 object-contain pointer-events-none"
           />
 
-          {/* Tooltip on hover or touch */}
+          {/* Hover / Tap Tooltip */}
           {activeTooltip?.index === idx && (
             <span
-              className="absolute -top-9 px-2 py-1 bg-yellow text-[#111111] font-mono text-[11px] font-black uppercase tracking-[var(--track-label)] rounded border-1.5 border-[#111111] shadow-[2px_2px_0px_#111111] whitespace-nowrap pointer-events-none z-[60]"
+              className="absolute -top-9 px-2.5 py-1 bg-yellow text-[#111111] font-mono text-[11px] font-black uppercase tracking-[var(--track-label)] rounded border-2 border-[#111111] shadow-[2px_2px_0px_#111111] whitespace-nowrap pointer-events-none z-[60]"
             >
               {tool.name}
             </span>
@@ -357,7 +417,7 @@ export default function HeroOrbit({ isDark, shouldReduceMotion }) {
 
       {/* Mobile touch hint */}
       {isMobile && !activeTooltip && (
-        <div className="absolute -bottom-3 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider text-ink/70 dark:text-yellow/80 bg-paper/90 dark:bg-[#14120F]/90 border border-ink/20 dark:border-[#2E2A24] pointer-events-none z-[35]">
+        <div className="absolute -bottom-2 left-1/2 -translate-x-1/2 px-2.5 py-0.5 rounded-full font-mono text-[10px] font-bold uppercase tracking-wider text-ink/70 dark:text-yellow/80 bg-paper/90 dark:bg-[#14120F]/90 border border-ink/20 dark:border-[#2E2A24] pointer-events-none z-[35]">
           Tap icon to pause
         </div>
       )}
