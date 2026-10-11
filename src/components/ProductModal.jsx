@@ -81,7 +81,7 @@ export default function ProductModal({ product, isDark, onClose }) {
             }`}>
               {product.tagline}
             </p>
-            {product.url && (
+            {product.url && product.url !== '#' && (
               <a
                 href={product.url}
                 target="_blank"
@@ -167,7 +167,7 @@ export default function ProductModal({ product, isDark, onClose }) {
             Founder &bull; Software Architecture
           </span>
           <div className="flex items-center gap-3">
-            {product.url && (
+            {product.url && product.url !== '#' && (
               <a
                 href={product.url}
                 target="_blank"

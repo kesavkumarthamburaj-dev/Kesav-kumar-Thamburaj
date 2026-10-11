@@ -195,7 +195,7 @@ export default function SoftwareSection({ isDark, onOpenProductModal }) {
                     isDark ? 'border-[#2E2A24]' : 'border-ink/20'
                   }`}>
                     <div className="flex items-center gap-2.5">
-                      {product.url && (
+                      {product.url && product.url !== '#' && (
                         <a
                           href={product.url}
                           target="_blank"
