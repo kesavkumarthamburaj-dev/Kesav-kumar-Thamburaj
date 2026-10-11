@@ -25,6 +25,8 @@ export default function ContactSection({ isDark }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPhone, setCopiedPhone] = useState(false);
+  const [waLogoError, setWaLogoError] = useState(false);
+  const [igLogoError, setIgLogoError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -283,18 +285,91 @@ export default function ContactSection({ isDark }) {
                 {contact.phone}
               </a>
 
-              <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between">
-                <a
-                  href={profile.whatsappLink}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="btn-slide-fill inline-flex items-center gap-1.5 px-3 py-1.5 bg-mint text-[#111111] font-mono text-xs font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2 border-[#111111] shadow-[2px_2px_0px_#111111] hover:scale-105 active:scale-95 transition-transform"
-                >
-                  <span>WhatsApp Chat</span>
-                  <ArrowUpRight className="w-3.5 h-3.5 text-[#111111]" />
-                </a>
-                <span className="text-xs font-mono font-semibold uppercase tracking-[var(--track-label)] text-[#C9BFAE]">IST Timezone</span>
+              <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-xs font-mono text-[#C9BFAE]">
+                <span>Direct Voice &bull; Cellular</span>
+                <span className="font-semibold uppercase tracking-[var(--track-label)]">IST Timezone</span>
               </div>
+            </div>
+
+            {/* Social Direct Action Buttons (WhatsApp & Instagram) */}
+            <div className="flex flex-col sm:flex-row items-stretch gap-3 w-full">
+              {/* WhatsApp Button */}
+              <motion.a
+                href={portfolioContent.social?.whatsapp || profile.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat with Kesav on WhatsApp"
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                style={{ '--slide-fill': '#FFD60A' }}
+                className="btn-slide-fill group/wa flex-1 min-h-[48px] px-3.5 py-2.5 rounded-xl border-2.5 border-[#111111] bg-[#3DDC97] text-[#111111] shadow-[3px_3px_0px_#111111] flex items-center justify-between gap-3 cursor-pointer select-none font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] transition-shadow"
+              >
+                <div className="flex items-center gap-3">
+                  <motion.span
+                    whileHover={shouldReduceMotion ? undefined : { rotate: [-4, 4, -4, 4, 0], transition: { duration: 0.35 } }}
+                    className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] rounded-lg bg-[#111111] border border-black/20 flex items-center justify-center shrink-0 shadow-inner group-hover/wa:scale-105 transition-transform"
+                  >
+                    {!waLogoError ? (
+                      <img
+                        src="/logos/whatsapp.svg"
+                        width={24}
+                        height={24}
+                        alt="WhatsApp logo"
+                        className="w-6 h-6 object-contain pointer-events-none"
+                        onError={() => setWaLogoError(true)}
+                      />
+                    ) : (
+                      <span className="font-headline font-black text-white text-lg leading-none select-none">
+                        W
+                      </span>
+                    )}
+                  </motion.span>
+                  <span className="text-[#111111] leading-tight">Chat on WhatsApp</span>
+                </div>
+                <ArrowUpRight
+                  className={`w-4 h-4 text-[#111111] shrink-0 ${
+                    shouldReduceMotion ? '' : 'transition-transform duration-150 group-hover/wa:translate-x-1 group-hover/wa:-translate-y-1'
+                  }`}
+                />
+              </motion.a>
+
+              {/* Instagram Button */}
+              <motion.a
+                href={portfolioContent.social?.instagram || profile.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open Kesav's Instagram"
+                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                style={{ '--slide-fill': '#FFD60A' }}
+                className="btn-slide-fill group/ig flex-1 min-h-[48px] px-3.5 py-2.5 rounded-xl border-2.5 border-[#111111] bg-[#FF3D81] text-[#111111] shadow-[3px_3px_0px_#111111] flex items-center justify-between gap-3 cursor-pointer select-none font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] transition-shadow"
+              >
+                <div className="flex items-center gap-3">
+                  <motion.span
+                    whileHover={shouldReduceMotion ? undefined : { rotate: [-4, 4, -4, 4, 0], transition: { duration: 0.35 } }}
+                    className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] rounded-lg bg-[#111111] border border-black/20 flex items-center justify-center shrink-0 shadow-inner group-hover/ig:scale-105 transition-transform"
+                  >
+                    {!igLogoError ? (
+                      <img
+                        src="/logos/instagram.svg"
+                        width={24}
+                        height={24}
+                        alt="Instagram logo"
+                        className="w-6 h-6 object-contain pointer-events-none"
+                        onError={() => setIgLogoError(true)}
+                      />
+                    ) : (
+                      <span className="font-headline font-black text-white text-lg leading-none select-none">
+                        I
+                      </span>
+                    )}
+                  </motion.span>
+                  <span className="text-[#111111] leading-tight">Follow on Instagram</span>
+                </div>
+                <ArrowUpRight
+                  className={`w-4 h-4 text-[#111111] shrink-0 ${
+                    shouldReduceMotion ? '' : 'transition-transform duration-150 group-hover/ig:translate-x-1 group-hover/ig:-translate-y-1'
+                  }`}
+                />
+              </motion.a>
             </div>
 
             {/* Studio Note Card */}

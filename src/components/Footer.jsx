@@ -55,6 +55,35 @@ export default function Footer({ isDark }) {
                 <span>Open for Projects</span>
               </span>
             </div>
+
+            {/* Social Icons Row */}
+            <div className="flex items-center gap-3 pt-2">
+              <a
+                href={portfolioContent.social?.whatsapp || profile.whatsappLink}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Chat with Kesav on WhatsApp"
+                className="w-11 h-11 rounded-lg bg-[#3DDC97] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+                title="Chat on WhatsApp"
+              >
+                <span className="w-8 h-8 rounded-md bg-[#111111] flex items-center justify-center">
+                  <img src="/logos/whatsapp.svg" width={20} height={20} alt="WhatsApp logo" className="w-5 h-5 pointer-events-none" />
+                </span>
+              </a>
+
+              <a
+                href={portfolioContent.social?.instagram || profile.instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                aria-label="Open Kesav's Instagram"
+                className="w-11 h-11 rounded-lg bg-[#FF3D81] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+                title="Follow on Instagram"
+              >
+                <span className="w-8 h-8 rounded-md bg-[#111111] flex items-center justify-center">
+                  <img src="/logos/instagram.svg" width={20} height={20} alt="Instagram logo" className="w-5 h-5 pointer-events-none" />
+                </span>
+              </a>
+            </div>
           </div>
 
           {/* Quick Links (3 cols) */}
@@ -104,26 +133,28 @@ export default function Footer({ isDark }) {
               </li>
               <li>
                 <a
-                  href={profile.whatsappLink}
+                  href={portfolioContent.social?.whatsapp || profile.whatsappLink}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-mint hover:underline block uppercase tracking-[var(--track-button)] whitespace-nowrap"
+                  aria-label="Chat with Kesav on WhatsApp"
+                  className="text-mint hover:underline inline-flex items-center gap-1.5 uppercase tracking-[var(--track-button)] whitespace-nowrap"
                 >
-                  WhatsApp Instant &rarr;
+                  <img src="/logos/whatsapp.svg" width={14} height={14} alt="WhatsApp logo" className="w-3.5 h-3.5 inline-block" />
+                  <span>WhatsApp Instant &rarr;</span>
                 </a>
               </li>
-              {profile.instagramUrl && (
-                <li>
-                  <a
-                    href={profile.instagramUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="text-pink hover:underline block uppercase tracking-[var(--track-button)] whitespace-nowrap"
-                  >
-                    Instagram @kesavkumar.designs &rarr;
-                  </a>
-                </li>
-              )}
+              <li>
+                <a
+                  href={portfolioContent.social?.instagram || profile.instagramUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open Kesav's Instagram"
+                  className="text-pink hover:underline inline-flex items-center gap-1.5 uppercase tracking-[var(--track-button)] whitespace-nowrap"
+                >
+                  <img src="/logos/instagram.svg" width={14} height={14} alt="Instagram logo" className="w-3.5 h-3.5 inline-block" />
+                  <span>Instagram &rarr;</span>
+                </a>
+              </li>
             </ul>
           </div>
         </div>
