@@ -151,8 +151,8 @@ export const portfolioContent = {
         category: "Typographic Poster",
         format: "Screenprint 3-Color Riso",
         image: "/work/poster-filter-kaapi.webp",
-        width: 800,
-        height: 1100,
+        width: 768,
+        height: 1024,
         details: "A typographic love letter to South Indian coffee culture. Printed with pure sunflower yellow, warm ink, and hot fluorescent pink separations.",
       },
       {
