@@ -2,7 +2,11 @@
 // Central source of truth for all portfolio content.
 // Edit this file to update projects, reel links, copy, tools, and URLs without touching React components.
 
+import { motionConfig, TOOL_LOGOS } from './motion.config';
+
 export const portfolioContent = {
+  motion: motionConfig,
+  toolLogos: TOOL_LOGOS,
   profile: {
     name: "Kesav Kumar T",
     shortName: "KESAV",

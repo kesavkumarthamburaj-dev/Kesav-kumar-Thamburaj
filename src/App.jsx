@@ -12,6 +12,7 @@ import LightboxModal from './components/LightboxModal';
 import ProductModal from './components/ProductModal';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import CustomCursor from './components/CustomCursor';
+import FloatingToolsLayer from './components/FloatingToolsLayer';
 import { portfolioContent } from './data/content';
 
 export default function App() {
@@ -107,9 +108,12 @@ export default function App() {
   };
 
   return (
-    <div className="min-h-screen flex flex-col font-body selection:bg-pink selection:text-ink">
+    <div className="min-h-screen flex flex-col font-body selection:bg-pink selection:text-ink relative">
       {/* Scroll Progress Bar: 4px fixed at top, yellow in light mode, pink in dark mode */}
       <ScrollProgressBar isDark={isDark} />
+
+      {/* Floating Tools Layer: fixed full-viewport (z-[18], pointer-events: none) */}
+      <FloatingToolsLayer isDark={isDark} shouldReduceMotion={_reduceMotionActive} />
 
       {/* Custom Cursor: 14px ink dot that grows to 56px with "VIEW" label over cards */}
       <CustomCursor isDark={isDark} />

@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import { motion, useScroll, useTransform, useReducedMotion } from 'framer-motion';
 import { ArrowDown, ArrowUpRight, Sparkles, MapPin } from 'lucide-react';
 import { portfolioContent } from '../data/content';
+import HeroOrbit from './HeroOrbit';
 
 /**
  * MagneticButton: Wraps buttons so they follow the cursor within a 12px radius,
@@ -122,179 +123,187 @@ export default function HeroSection({ isDark }) {
       </div>
 
       <div className="max-w-7xl mx-auto w-full relative z-10 my-auto">
-        {/* Top Badges Row */}
-        <div className="flex flex-wrap items-center gap-3 mb-6 sm:mb-8">
-          {/* Rotated Sticker Badge: "Open for projects"
-              Pops in last (scale 0 to 1 with spring overshoot), then 6s subtle rotate wobble loop */}
-          <motion.div
-            initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0, opacity: 0 }}
-            animate={shouldReduceMotion ? { opacity: 1 } : { scale: 1, opacity: 1 }}
-            transition={{
-              type: 'spring',
-              stiffness: 350,
-              damping: 18,
-              delay: 0.75, // pops in last
-            }}
-            className="sticker-badge bg-mint text-[#111111] text-xs sm:text-sm font-bold shadow-[3px_3px_0px_#111111] cursor-pointer animate-sticker-wobble"
-          >
-            <Sparkles className="w-3.5 h-3.5 mr-1.5 inline-block text-[#111111]" />
-            <span>{hero.sticker}</span>
-          </motion.div>
+        <div className="grid grid-cols-1 lg:grid-cols-12 gap-6 lg:gap-10 items-center">
+          
+          {/* Part 1: Badges & Giant Stacked Headline */}
+          <div className="col-span-1 lg:col-span-7 lg:row-start-1 flex flex-col justify-center">
+            {/* Top Badges Row */}
+            <div className="flex flex-wrap items-center gap-3 mb-4 sm:mb-6">
+              {/* Rotated Sticker Badge: "Open for projects" */}
+              <motion.div
+                initial={shouldReduceMotion ? { opacity: 0 } : { scale: 0, opacity: 0 }}
+                animate={shouldReduceMotion ? { opacity: 1 } : { scale: 1, opacity: 1 }}
+                transition={{
+                  type: 'spring',
+                  stiffness: 350,
+                  damping: 18,
+                  delay: 0.75, // pops in last
+                }}
+                className="sticker-badge bg-mint text-[#111111] text-xs sm:text-sm font-bold shadow-[3px_3px_0px_#111111] cursor-pointer animate-sticker-wobble"
+              >
+                <Sparkles className="w-3.5 h-3.5 mr-1.5 inline-block text-[#111111]" />
+                <span>{hero.sticker}</span>
+              </motion.div>
 
-          {/* Location Badge */}
-          <div className={`inline-flex items-center gap-1.5 px-3 py-1 font-mono text-xs font-bold uppercase tracking-[var(--track-label)] rounded rotate-[1.5deg] border ${
-            isDark
-              ? 'bg-[#1A1815] text-[#FFF8EC] border-[#2E2A24] shadow-[2px_2px_0px_#0A0A09]'
-              : 'bg-paper text-ink border-2 border-ink shadow-[2px_2px_0px_#111111]'
-          }`}>
-            <MapPin className="w-3.5 h-3.5 text-pink" />
-            <span>{profile.location}</span>
+              {/* Location Badge */}
+              <div className={`inline-flex items-center gap-1.5 px-3 py-1 font-mono text-xs font-bold uppercase tracking-[var(--track-label)] rounded rotate-[1.5deg] border ${
+                isDark
+                  ? 'bg-[#1A1815] text-[#FFF8EC] border-[#2E2A24] shadow-[2px_2px_0px_#0A0A09]'
+                  : 'bg-paper text-ink border-2 border-ink shadow-[2px_2px_0px_#111111]'
+              }`}>
+                <MapPin className="w-3.5 h-3.5 text-pink" />
+                <span>{profile.location}</span>
+              </div>
+
+              {/* Screen-Print Edition Tag */}
+              <div className={`hidden sm:inline-flex items-center px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[var(--track-label)] rounded -rotate-1 ${
+                isDark ? 'bg-[#1A1815] text-yellow border border-[#2E2A24]' : 'bg-ink text-yellow'
+              }`}>
+                <span>PRINT SERIES NO. 2026</span>
+              </div>
+            </div>
+
+            {/* GIANT STACKED HEADLINE WITH MISREGISTERED OVERPRINT LAYERS */}
+            <div
+              onMouseEnter={() => setIsHeadlineHovered(true)}
+              onMouseLeave={() => setIsHeadlineHovered(false)}
+              style={{ paddingInline: '0.04em' }}
+              className="relative grid [grid-template-columns:1fr] [grid-template-rows:1fr] font-headline uppercase leading-[0.92] tracking-[var(--track-display)] text-[clamp(3.6rem,11.5vw,7.6rem)] lg:text-[clamp(3.6rem,7.2vw,7.4rem)] xl:text-[clamp(4.2rem,7.6vw,8.4rem)] select-none my-3 sm:my-5 overflow-visible cursor-default"
+            >
+              {/* Layer 1 (Back): Blue Overprint Layer */}
+              <motion.div
+                aria-hidden="true"
+                initial={{ x: initialBlueX, y: initialBlueY, opacity: 1 }}
+                animate={{
+                  x: blueTargetX,
+                  y: blueTargetY,
+                  opacity: 1,
+                }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : isHeadlineHovered ? 0.2 : 0.7,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                style={{
+                  gridArea: '1 / 1',
+                  font: 'inherit',
+                  fontSize: 'inherit',
+                  lineHeight: 'inherit',
+                  letterSpacing: 'inherit',
+                  textTransform: 'inherit',
+                }}
+                className="overprint-blue pointer-events-none select-none z-0"
+              >
+                <span className="block whitespace-nowrap">KESAV</span>
+                <span className="block whitespace-nowrap">DESIGNS</span>
+                <span className="block whitespace-nowrap">THE SHELF.</span>
+              </motion.div>
+
+              {/* Layer 2 (Middle): Pink Overprint Layer */}
+              <motion.div
+                aria-hidden="true"
+                initial={{ x: initialPinkX, y: initialPinkY, opacity: 1 }}
+                animate={{
+                  x: pinkTargetX,
+                  y: pinkTargetY,
+                  opacity: 1,
+                }}
+                transition={{
+                  duration: shouldReduceMotion ? 0 : isHeadlineHovered ? 0.2 : 0.7,
+                  ease: [0.22, 1, 0.36, 1],
+                }}
+                style={{
+                  gridArea: '1 / 1',
+                  font: 'inherit',
+                  fontSize: 'inherit',
+                  lineHeight: 'inherit',
+                  letterSpacing: 'inherit',
+                  textTransform: 'inherit',
+                }}
+                className="overprint-pink pointer-events-none select-none z-10"
+              >
+                <span className="block whitespace-nowrap">KESAV</span>
+                <span className="block whitespace-nowrap">DESIGNS</span>
+                <span className="block whitespace-nowrap">THE SHELF.</span>
+              </motion.div>
+
+              {/* Layer 3 (Front): Main Text Layer (Accessible, SEO-indexed) */}
+              <h1
+                style={{
+                  gridArea: '1 / 1',
+                  font: 'inherit',
+                  fontSize: 'inherit',
+                  lineHeight: 'inherit',
+                  letterSpacing: 'inherit',
+                  textTransform: 'inherit',
+                }}
+                className={`relative z-20 transition-colors ${
+                  isDark
+                    ? 'text-yellow drop-shadow-[0_0_24px_rgba(255,214,10,0.35)]'
+                    : 'text-[#111111]'
+                }`}
+              >
+                <span className="block whitespace-nowrap">KESAV</span>
+                <span className="block whitespace-nowrap">DESIGNS</span>
+                <span className="block whitespace-nowrap">THE SHELF.</span>
+              </h1>
+            </div>
           </div>
 
-          {/* Screen-Print Edition Tag */}
-          <div className={`hidden sm:inline-flex items-center px-2.5 py-1 font-mono text-xs font-bold uppercase tracking-[var(--track-label)] rounded -rotate-1 ${
-            isDark ? 'bg-[#1A1815] text-yellow border border-[#2E2A24]' : 'bg-ink text-yellow'
-          }`}>
-            <span>PRINT SERIES NO. 2026</span>
+          {/* Part 2: Hero Orbit (Single Instance in DOM! Desktop beside headline, Mobile between headline and copy) */}
+          <div className="col-span-1 lg:col-span-5 lg:col-start-8 lg:row-start-1 lg:row-span-2 flex items-center justify-center my-4 lg:my-0">
+            <HeroOrbit isDark={isDark} shouldReduceMotion={shouldReduceMotion} />
           </div>
+
+          {/* Part 3: Subtitle & Magnetic CTAs */}
+          <div className="col-span-1 lg:col-span-7 lg:row-start-2 flex flex-col justify-start">
+            {/* Hero Line: Intro line */}
+            <motion.p
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
+              className={`mt-2 sm:mt-4 text-lg sm:text-xl md:text-2xl font-body font-bold max-w-2xl leading-snug tracking-[var(--track-lead)] text-balance transition-colors ${
+                isDark ? 'text-[#FFF8EC]' : 'text-ink'
+              }`}
+            >
+              {hero.subtitle}
+            </motion.p>
+
+            {/* CTAs with Magnetic Effect on Desktop: follows cursor within 12px */}
+            <motion.div
+              initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ duration: 0.5, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
+              className="mt-6 sm:mt-8 flex flex-wrap items-center gap-4 sm:gap-5"
+            >
+              {/* CTA Primary */}
+              <MagneticButton
+                onClick={() => scrollTo('packaging')}
+                className="btn-primary btn-slide-fill group whitespace-nowrap cursor-pointer"
+              >
+                <span className="relative z-10 flex items-center gap-2">
+                  <span>{hero.ctaPrimary.label}</span>
+                  <ArrowDown className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-1 text-[#111111]" />
+                </span>
+              </MagneticButton>
+
+              {/* CTA Secondary */}
+              <MagneticButton
+                onClick={() => scrollTo('contact')}
+                className="btn-secondary group whitespace-nowrap cursor-pointer"
+              >
+                <span className="flex items-center gap-1.5">
+                  <span>{hero.ctaSecondary.label}</span>
+                  <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                </span>
+              </MagneticButton>
+            </motion.div>
+          </div>
+
         </div>
-
-        {/* GIANT STACKED HEADLINE WITH MISREGISTERED OVERPRINT LAYERS
-            1. Built as one stacked block: wrapper has position: relative; display: grid.
-            2. Main text and two overprint copies all sit in the SAME grid cell (grid-area: 1 / 1).
-            3. Overprint copies are decorative (aria-hidden="true", pointer-events: none, user-select: none).
-            4. Layer order: Blue (back), Pink (middle), Main black text (front).
-            5. Exact same typography: inherits font, line-height 0.92, letter-spacing, text-transform.
-            6. Misregistration done ONLY with transform: translate: pink(-3px, 2px), blue(3px, -2px). */}
-        <div
-          onMouseEnter={() => setIsHeadlineHovered(true)}
-          onMouseLeave={() => setIsHeadlineHovered(false)}
-          style={{ paddingInline: '0.05em' }}
-          className="relative grid [grid-template-columns:1fr] [grid-template-rows:1fr] headline-giant font-headline uppercase leading-[0.92] tracking-[var(--track-display)] select-none my-4 sm:my-6 overflow-visible cursor-default"
-        >
-          {/* Layer 1 (Back): Blue Overprint Layer */}
-          <motion.div
-            aria-hidden="true"
-            initial={{ x: initialBlueX, y: initialBlueY, opacity: 1 }}
-            animate={{
-              x: blueTargetX,
-              y: blueTargetY,
-              opacity: 1,
-            }}
-            transition={{
-              duration: shouldReduceMotion ? 0 : isHeadlineHovered ? 0.2 : 0.7,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            style={{
-              gridArea: '1 / 1',
-              font: 'inherit',
-              fontSize: 'inherit',
-              lineHeight: 'inherit',
-              letterSpacing: 'inherit',
-              textTransform: 'inherit',
-            }}
-            className="overprint-blue pointer-events-none select-none z-0"
-          >
-            <span className="block">KESAV</span>
-            <span className="block">DESIGNS</span>
-            <span className="block">THE SHELF.</span>
-          </motion.div>
-
-          {/* Layer 2 (Middle): Pink Overprint Layer */}
-          <motion.div
-            aria-hidden="true"
-            initial={{ x: initialPinkX, y: initialPinkY, opacity: 1 }}
-            animate={{
-              x: pinkTargetX,
-              y: pinkTargetY,
-              opacity: 1,
-            }}
-            transition={{
-              duration: shouldReduceMotion ? 0 : isHeadlineHovered ? 0.2 : 0.7,
-              ease: [0.22, 1, 0.36, 1],
-            }}
-            style={{
-              gridArea: '1 / 1',
-              font: 'inherit',
-              fontSize: 'inherit',
-              lineHeight: 'inherit',
-              letterSpacing: 'inherit',
-              textTransform: 'inherit',
-            }}
-            className="overprint-pink pointer-events-none select-none z-10"
-          >
-            <span className="block">KESAV</span>
-            <span className="block">DESIGNS</span>
-            <span className="block">THE SHELF.</span>
-          </motion.div>
-
-          {/* Layer 3 (Front): Main Text Layer (Accessible, SEO-indexed) */}
-          <h1
-            style={{
-              gridArea: '1 / 1',
-              font: 'inherit',
-              fontSize: 'inherit',
-              lineHeight: 'inherit',
-              letterSpacing: 'inherit',
-              textTransform: 'inherit',
-            }}
-            className={`relative z-20 transition-colors ${
-              isDark
-                ? 'text-yellow drop-shadow-[0_0_24px_rgba(255,214,10,0.35)]'
-                : 'text-[#111111]'
-            }`}
-          >
-            <span className="block">KESAV</span>
-            <span className="block">DESIGNS</span>
-            <span className="block">THE SHELF.</span>
-          </h1>
-        </div>
-
-        {/* Hero Line: Intro line (20 to 28px), tracking var(--track-lead), max-width 65ch */}
-        <motion.p
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.3, ease: [0.22, 1, 0.36, 1] }}
-          className={`mt-6 sm:mt-8 text-xl sm:text-2xl md:text-3xl font-body font-bold max-w-3xl leading-snug tracking-[var(--track-lead)] text-balance transition-colors ${
-            isDark ? 'text-[#FFF8EC]' : 'text-ink'
-          }`}
-        >
-          {hero.subtitle}
-        </motion.p>
-
-        {/* CTAs with Magnetic Effect on Desktop: follows cursor within 12px */}
-        <motion.div
-          initial={shouldReduceMotion ? { opacity: 1 } : { opacity: 0, y: 15 }}
-          animate={{ opacity: 1, y: 0 }}
-          transition={{ duration: 0.5, delay: 0.45, ease: [0.22, 1, 0.36, 1] }}
-          className="mt-8 sm:mt-10 flex flex-wrap items-center gap-4 sm:gap-5"
-        >
-          {/* CTA Primary: Slide-fill pop color layer + arrow nudge */}
-          <MagneticButton
-            onClick={() => scrollTo('packaging')}
-            className="btn-primary btn-slide-fill group whitespace-nowrap cursor-pointer"
-          >
-            <span className="relative z-10 flex items-center gap-2">
-              <span>{hero.ctaPrimary.label}</span>
-              <ArrowDown className="w-4 h-4 transition-transform duration-200 group-hover:translate-y-1 text-[#111111]" />
-            </span>
-          </MagneticButton>
-
-          {/* CTA Secondary: Outlined button with magnetic response */}
-          <MagneticButton
-            onClick={() => scrollTo('contact')}
-            className="btn-secondary group whitespace-nowrap cursor-pointer"
-          >
-            <span className="flex items-center gap-1.5">
-              <span>{hero.ctaSecondary.label}</span>
-              <ArrowUpRight className="w-4 h-4 transition-transform duration-200 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
-            </span>
-          </MagneticButton>
-        </motion.div>
       </div>
 
       {/* Bottom Proof Strip & Scroll Prompt */}
-      <div className={`max-w-7xl mx-auto w-full pt-12 mt-6 border-t-2 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10 transition-colors ${
+      <div className={`max-w-7xl mx-auto w-full pt-10 sm:pt-12 mt-8 border-t-2 flex flex-col sm:flex-row sm:items-center justify-between gap-6 relative z-10 transition-colors ${
         isDark ? 'border-[#2E2A24]' : 'border-ink'
       }`}>
         <div className="flex flex-wrap items-center gap-6 sm:gap-10">
