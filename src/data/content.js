@@ -173,8 +173,8 @@ export const portfolioContent = {
         category: "Film Festival Poster",
         format: "Monochrome & Ink Punch",
         image: "/work/poster-tamil-noir.webp",
-        width: 800,
-        height: 950,
+        width: 683,
+        height: 1024,
         details: "High-contrast minimalist film festival poster celebrating classic cinematic storytelling with deep shadows and razor-sharp type hierarchy.",
       },
       {
