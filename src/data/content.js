@@ -4,9 +4,15 @@
 
 import { motionConfig, TOOL_LOGOS } from './motion.config';
 
+const socialLinks = {
+  whatsapp: "https://wa.me/919025849940?text=Hi%20Kesav%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.",
+  instagram: "https://www.instagram.com/kesavkumarthamburaj/",
+};
+
 export const portfolioContent = {
   motion: motionConfig,
   toolLogos: TOOL_LOGOS,
+  social: socialLinks,
   profile: {
     name: "Kesav Kumar T",
     shortName: "KESAV",
@@ -15,16 +21,11 @@ export const portfolioContent = {
     email: "kesavkumarthamburaj@gmail.com",
     phone: "+91 90258 49940",
     phoneDisplay: "+91 90258 49940",
-    whatsappLink: "https://wa.me/919025849940?text=Hi%20Kesav%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.",
-    instagramUrl: "https://instagram.com/your_username",
+    whatsappLink: socialLinks.whatsapp,
+    instagramUrl: socialLinks.instagram,
     githubUrl: "https://github.com",
     linkedinUrl: "https://linkedin.com",
     copyrightYear: 2026,
-  },
-
-  social: {
-    whatsapp: "https://wa.me/919025849940?text=Hi%20Kesav%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.",
-    instagram: "https://instagram.com/your_username",
   },
 
   nav: [
@@ -350,8 +351,8 @@ export const portfolioContent = {
     phone: "+91 90258 49940",
     phoneDisplay: "+91 90258 49940",
     location: "Tamil Nadu, India",
-    whatsapp: "https://wa.me/919025849940?text=Hi%20Kesav%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.",
-    instagram: "https://instagram.com/your_username",
+    whatsapp: socialLinks.whatsapp,
+    instagram: socialLinks.instagram,
     projectTypes: [
       "Packaging",
       "Posters/Banners",
