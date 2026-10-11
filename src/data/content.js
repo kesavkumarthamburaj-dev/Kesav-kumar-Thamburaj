@@ -58,8 +58,8 @@ export const portfolioContent = {
         pack: "500ml Glass Bottle & Outer Rigid Carton",
         deliverables: "Dieline CAD, Label Artwork, 3D Render, Pacdora Mockup",
         image: "/work/packaging-aura-oil.webp",
-        width: 800,
-        height: 1000,
+        width: 768,
+        height: 1024,
         rotation: -2.4, // Rotated between -3 and 3 degrees
         accentColor: "#FFD60A",
         details: "Cold-pressed virgin sesame and groundnut oil packaging. Dual-layer dieline structure designed for humidity-resistant kraft substrate with opaque ink screenprint finish.",
