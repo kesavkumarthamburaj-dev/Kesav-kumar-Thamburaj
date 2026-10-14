@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useState, useEffect, lazy, Suspense } from 'react';
 import Navbar from './components/Navbar';
 import HeroSection from './components/HeroSection';
 import PackagingSection from './components/PackagingSection';
@@ -13,9 +13,24 @@ import ProductModal from './components/ProductModal';
 import ScrollProgressBar from './components/ScrollProgressBar';
 import CustomCursor from './components/CustomCursor';
 import FloatingToolsLayer from './components/FloatingToolsLayer';
+import WelcomeCard from './components/WelcomeCard';
+import PrivacyModal from './components/PrivacyModal';
 import { portfolioContent } from './data/content';
 
+const AdminVisitorsDashboard = lazy(() => import('./components/AdminVisitorsDashboard'));
+
 export default function App() {
+  // Check if visitor is accessing the private admin portal
+  const [isAdminRoute] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return window.location.pathname.startsWith('/admin/visitors');
+    }
+    return false;
+  });
+
+  // Privacy modal state
+  const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
+
   // Theme state: dark / light
   // Defaults to system setting on first visit, then remembered in localStorage
   const [isDark, setIsDark] = useState(() => {
@@ -38,7 +53,7 @@ export default function App() {
     document.documentElement.setAttribute('data-theme', theme);
     try {
       localStorage.setItem('kesav_portfolio_theme', theme);
-    } catch {}
+    } catch { }
 
     // Update <meta name="theme-color"> dynamically
     const metaTheme = document.querySelector('meta[name="theme-color"]');
@@ -119,6 +134,14 @@ export default function App() {
       index: newIndex,
     });
   };
+
+  if (isAdminRoute) {
+    return (
+      <Suspense fallback={<div className="min-h-screen flex items-center justify-center font-mono text-sm">Loading admin dashboard...</div>}>
+        <AdminVisitorsDashboard isDark={isDark} onToggleDark={toggleTheme} />
+      </Suspense>
+    );
+  }
 
   return (
     <div className="min-h-screen flex flex-col font-body selection:bg-pink selection:text-ink relative">
@@ -205,7 +228,7 @@ export default function App() {
       </main>
 
       {/* Footer (#111111 light, #0A0A09 dark) */}
-      <Footer isDark={isDark} />
+      <Footer isDark={isDark} onOpenPrivacy={() => setIsPrivacyOpen(true)} />
 
       {/* MODALS */}
       {/* Lightbox for Packaging and Posters */}
@@ -227,6 +250,16 @@ export default function App() {
           onClose={() => setActiveProduct(null)}
         />
       )}
+
+      {/* Privacy & Data Details Modal */}
+      <PrivacyModal
+        isOpen={isPrivacyOpen}
+        onClose={() => setIsPrivacyOpen(false)}
+        isDark={isDark}
+      />
+
+      {/* Non-blocking Welcome Card */}
+      <WelcomeCard isDark={isDark} />
     </div>
   );
 }

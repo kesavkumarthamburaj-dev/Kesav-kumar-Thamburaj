@@ -2,17 +2,33 @@ import { defineConfig, loadEnv } from 'vite';
 import react from '@vitejs/plugin-react';
 import tailwindcss from '@tailwindcss/vite';
 
-function apiContactPlugin() {
+import path from 'path';
+import { pathToFileURL } from 'url';
+
+function apiRoutesPlugin() {
   return {
-    name: 'vite-plugin-api-contact',
+    name: 'vite-plugin-api-routes',
     configureServer(server) {
       server.middlewares.use(async (req, res, next) => {
         const url = req.url?.split('?')[0];
-        if (url !== '/api/contact') {
+        const routeMap = {
+          '/api/contact': './api/contact.js',
+          '/api/visit': './api/visit.js',
+          '/api/visit-delete': './api/visit-delete.js',
+          '/api/admin-visitors': './api/admin-visitors.js',
+        };
+
+        const moduleRelative = routeMap[url];
+        if (!moduleRelative) {
           return next();
         }
 
         try {
+          // Parse query string for req.query
+          const queryString = req.url?.split('?')[1] || '';
+          const urlParams = new URLSearchParams(queryString);
+          req.query = Object.fromEntries(urlParams.entries());
+
           // Read request body stream
           const chunks = [];
           for await (const chunk of req) {
@@ -41,12 +57,14 @@ function apiContactPlugin() {
             return res;
           };
 
-          // Dynamically import handler
-          const contactModule = await import('./api/contact.js');
-          const handler = contactModule.default;
+          // Dynamically import handler using absolute file URL
+          const absolutePath = path.resolve(process.cwd(), moduleRelative);
+          const fileUrl = pathToFileURL(absolutePath).href;
+          const apiModule = await import(fileUrl);
+          const handler = apiModule.default;
           await handler(req, res);
         } catch (err) {
-          console.error('[Vite Dev API Error]', err);
+          console.error(`[Vite Dev API Error: ${url}]`, err);
           res.statusCode = 500;
           res.setHeader('Content-Type', 'application/json');
           res.end(JSON.stringify({ error: 'server_error', message: err?.message || 'Server error' }));
@@ -65,9 +83,27 @@ export default defineConfig(({ mode }) => {
   if (env.CONTACT_TO_EMAIL && !process.env.CONTACT_TO_EMAIL) {
     process.env.CONTACT_TO_EMAIL = env.CONTACT_TO_EMAIL;
   }
+  if (env.KV_REST_API_URL && !process.env.KV_REST_API_URL) {
+    process.env.KV_REST_API_URL = env.KV_REST_API_URL;
+  }
+  if (env.KV_REST_API_TOKEN && !process.env.KV_REST_API_TOKEN) {
+    process.env.KV_REST_API_TOKEN = env.KV_REST_API_TOKEN;
+  }
+  if (env.UPSTASH_REDIS_REST_URL && !process.env.UPSTASH_REDIS_REST_URL) {
+    process.env.UPSTASH_REDIS_REST_URL = env.UPSTASH_REDIS_REST_URL;
+  }
+  if (env.UPSTASH_REDIS_REST_TOKEN && !process.env.UPSTASH_REDIS_REST_TOKEN) {
+    process.env.UPSTASH_REDIS_REST_TOKEN = env.UPSTASH_REDIS_REST_TOKEN;
+  }
+  if (env.ADMIN_KEY && !process.env.ADMIN_KEY) {
+    process.env.ADMIN_KEY = env.ADMIN_KEY;
+  }
+  if (env.USE_MOCK_REDIS && !process.env.USE_MOCK_REDIS) {
+    process.env.USE_MOCK_REDIS = env.USE_MOCK_REDIS;
+  }
 
   return {
-    plugins: [react(), tailwindcss(), apiContactPlugin()],
+    plugins: [react(), tailwindcss(), apiRoutesPlugin()],
     server: {
       watch: {
         ignored: [

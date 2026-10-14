@@ -5,7 +5,6 @@
 import { motionConfig, TOOL_LOGOS } from './motion.config';
 
 const socialLinks = {
-  whatsapp: "https://wa.me/919025849940?text=Hi%20Kesav%2C%20I%20saw%20your%20portfolio%20and%20would%20like%20to%20discuss%20a%20project.",
   instagram: "https://www.instagram.com/kesavkumarthamburaj/",
 };
 
@@ -19,9 +18,6 @@ export const portfolioContent = {
     title: "Packaging Designer, Video Editor & Software Founder",
     location: "Tamil Nadu, India",
     email: "kesavkumarthamburaj@gmail.com",
-    phone: "+91 90258 49940",
-    phoneDisplay: "+91 90258 49940",
-    whatsappLink: socialLinks.whatsapp,
     instagramUrl: socialLinks.instagram,
     githubUrl: "https://github.com",
     linkedinUrl: "https://linkedin.com",
@@ -236,7 +232,7 @@ export const portfolioContent = {
         sticker: "Live",
         stickerBg: "#3DDC97",
         stickerText: "#111111",
-        description: "Built for Indian SMBs, manufacturers, and freelancers: automated GST split calculations (CGST/SGST/IGST), multi-currency invoices, beautiful printable PDFs, and instant WhatsApp dispatch.",
+        description: "Built for Indian SMBs, manufacturers, and freelancers: automated GST split calculations (CGST/SGST/IGST), multi-currency invoices, beautiful printable PDFs, and instant client dispatch.",
         tags: ["React 19", "Vite", "Tailwind CSS", "PDF Engine", "GST Engine"],
         image: "/work/software-gathex-invoice.webp",
         width: 1000,
@@ -348,10 +344,7 @@ export const portfolioContent = {
     headline: "LET'S MAKE SOMETHING LOUD.",
     subline: "Have a packaging project, video campaign, or software vision? Let's get to work.",
     email: "kesavkumarthamburaj@gmail.com",
-    phone: "+91 90258 49940",
-    phoneDisplay: "+91 90258 49940",
     location: "Tamil Nadu, India",
-    whatsapp: socialLinks.whatsapp,
     instagram: socialLinks.instagram,
     projectTypes: [
       "Packaging",

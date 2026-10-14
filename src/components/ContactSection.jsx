@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { Mail, Phone, Send, CheckCircle2, AlertCircle, Copy, Check, ArrowUpRight } from 'lucide-react';
+import { Mail, Send, CheckCircle2, AlertCircle, Copy, Check, ArrowUpRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
 import { portfolioContent } from '../data/content';
 import MaskedHeadline from './MaskedHeadline';
@@ -24,8 +24,6 @@ export default function ContactSection({ isDark }) {
   const [errorType, setErrorType] = useState(null); // 'validation' | 'config' | 'send_failed' | 'rate_limit' | 'network'
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
-  const [copiedPhone, setCopiedPhone] = useState(false);
-  const [waLogoError, setWaLogoError] = useState(false);
   const [igLogoError, setIgLogoError] = useState(false);
 
   const handleChange = (e) => {
@@ -44,12 +42,6 @@ export default function ContactSection({ isDark }) {
     navigator.clipboard.writeText(contact.email);
     setCopiedEmail(true);
     setTimeout(() => setCopiedEmail(false), 2200);
-  };
-
-  const handleCopyPhone = () => {
-    navigator.clipboard.writeText(contact.phone);
-    setCopiedPhone(true);
-    setTimeout(() => setCopiedPhone(false), 2200);
   };
 
   const handleSubmit = async (e) => {
@@ -195,9 +187,8 @@ export default function ContactSection({ isDark }) {
           <span className="sticker-badge bg-pink text-[#111111] text-xs font-bold -rotate-2">
             PROJECT ENQUIRIES
           </span>
-          <span className={`font-mono text-xs font-bold uppercase tracking-[var(--track-label)] ${
-            isDark ? 'text-[#C9BFAE]' : 'text-yellow/80'
-          }`}>
+          <span className={`font-mono text-xs font-bold uppercase tracking-[var(--track-label)] ${isDark ? 'text-[#C9BFAE]' : 'text-yellow/80'
+            }`}>
             TAMIL NADU &bull; WORLDWIDE COLLABORATIONS
           </span>
         </div>
@@ -218,11 +209,10 @@ export default function ContactSection({ isDark }) {
           {/* Column 1: Direct Contact Info & Fast Action Cards (5 cols) */}
           <div className="lg:col-span-5 space-y-6">
             {/* Email Card */}
-            <div className={`p-6 rounded-xl transition-all duration-200 ${
-              isDark
+            <div className={`p-6 rounded-xl transition-all duration-200 ${isDark
                 ? 'bg-[#1A1815] border border-[#2E2A24] hover:border-yellow hover:shadow-[0_0_24px_rgba(255,214,10,0.25)]'
                 : 'bg-[#1A1A1E] border-3 border-yellow/60 shadow-[5px_5px_0px_#FFD60A]'
-            }`}>
+              }`}>
               <div className="flex items-center justify-between mb-3">
                 <span className="font-mono text-xs font-bold uppercase tracking-[var(--track-label)] text-yellow flex items-center gap-2">
                   <Mail className="w-4 h-4 text-pink" />
@@ -230,11 +220,10 @@ export default function ContactSection({ isDark }) {
                 </span>
                 <button
                   onClick={handleCopyEmail}
-                  className={`p-1.5 text-xs font-mono font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded flex items-center gap-1 cursor-pointer transition-colors active:scale-95 ${
-                    isDark
+                  className={`p-1.5 text-xs font-mono font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded flex items-center gap-1 cursor-pointer transition-colors active:scale-95 ${isDark
                       ? 'text-yellow border border-[#2E2A24] bg-[#14120F] hover:bg-yellow hover:text-[#111111]'
                       : 'text-yellow border border-yellow/40 hover:bg-yellow hover:text-ink'
-                  }`}
+                    }`}
                   title="Copy email to clipboard"
                 >
                   {copiedEmail ? <Check className="w-3.5 h-3.5 text-mint" /> : <Copy className="w-3.5 h-3.5" />}
@@ -253,86 +242,8 @@ export default function ContactSection({ isDark }) {
               </p>
             </div>
 
-            {/* Phone & WhatsApp Card */}
-            <div className={`p-6 rounded-xl transition-all duration-200 ${
-              isDark
-                ? 'bg-[#1A1815] border border-[#2E2A24] hover:border-mint hover:shadow-[0_0_24px_rgba(61,220,151,0.25)]'
-                : 'bg-[#1A1A1E] border-3 border-mint/60 shadow-[5px_5px_0px_#3DDC97]'
-            }`}>
-              <div className="flex items-center justify-between mb-3">
-                <span className="font-mono text-xs font-bold uppercase tracking-[var(--track-label)] text-mint flex items-center gap-2">
-                  <Phone className="w-4 h-4 text-mint" />
-                  <span>CALL / WHATSAPP</span>
-                </span>
-                <button
-                  onClick={handleCopyPhone}
-                  className={`p-1.5 text-xs font-mono font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded flex items-center gap-1 cursor-pointer transition-colors active:scale-95 ${
-                    isDark
-                      ? 'text-mint border border-[#2E2A24] bg-[#14120F] hover:bg-mint hover:text-[#111111]'
-                      : 'text-mint border border-mint/40 hover:bg-mint hover:text-ink'
-                  }`}
-                  title="Copy phone to clipboard"
-                >
-                  {copiedPhone ? <Check className="w-3.5 h-3.5 text-mint" /> : <Copy className="w-3.5 h-3.5" />}
-                  <span>{copiedPhone ? 'COPIED' : 'COPY'}</span>
-                </button>
-              </div>
-
-              <a
-                href={`tel:${contact.phone.replace(/\s+/g, '')}`}
-                className="contact-phone font-headline text-3xl text-[#FFF8EC] hover:text-mint transition-colors leading-none block"
-              >
-                {contact.phone}
-              </a>
-
-              <div className="mt-4 pt-3 border-t border-white/15 flex items-center justify-between text-xs font-mono text-[#C9BFAE]">
-                <span>Direct Voice &bull; Cellular</span>
-                <span className="font-semibold uppercase tracking-[var(--track-label)]">IST Timezone</span>
-              </div>
-            </div>
-
-            {/* Social Direct Action Buttons (WhatsApp & Instagram) */}
-            <div className="flex flex-col sm:flex-row items-stretch gap-3 w-full">
-              {/* WhatsApp Button */}
-              <motion.a
-                href={portfolioContent.social?.whatsapp || profile.whatsappLink}
-                target="_blank"
-                rel="noopener noreferrer"
-                aria-label="Chat with Kesav on WhatsApp"
-                whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
-                style={{ '--slide-fill': '#FFD60A' }}
-                className="btn-slide-fill group/wa flex-1 min-h-[48px] px-3.5 py-2.5 rounded-xl border-2.5 border-[#111111] bg-[#3DDC97] text-[#111111] shadow-[3px_3px_0px_#111111] flex items-center justify-between gap-3 cursor-pointer select-none font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] transition-shadow"
-              >
-                <div className="flex items-center gap-3">
-                  <motion.span
-                    whileHover={shouldReduceMotion ? undefined : { rotate: [-4, 4, -4, 4, 0], transition: { duration: 0.35 } }}
-                    className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] rounded-lg bg-[#111111] border border-black/20 flex items-center justify-center shrink-0 shadow-inner group-hover/wa:scale-105 transition-transform"
-                  >
-                    {!waLogoError ? (
-                      <img
-                        src="/logos/whatsapp.svg"
-                        width={24}
-                        height={24}
-                        alt="WhatsApp logo"
-                        className="w-6 h-6 object-contain pointer-events-none"
-                        onError={() => setWaLogoError(true)}
-                      />
-                    ) : (
-                      <span className="font-headline font-black text-white text-lg leading-none select-none">
-                        W
-                      </span>
-                    )}
-                  </motion.span>
-                  <span className="text-[#111111] leading-tight">Chat on WhatsApp</span>
-                </div>
-                <ArrowUpRight
-                  className={`w-4 h-4 text-[#111111] shrink-0 ${
-                    shouldReduceMotion ? '' : 'transition-transform duration-150 group-hover/wa:translate-x-1 group-hover/wa:-translate-y-1'
-                  }`}
-                />
-              </motion.a>
-
-              {/* Instagram Button */}
+            {/* Social Direct Action (Instagram - Public) */}
+            <div className="w-full">
               <motion.a
                 href={portfolioContent.social?.instagram || profile.instagramUrl}
                 target="_blank"
@@ -340,7 +251,7 @@ export default function ContactSection({ isDark }) {
                 aria-label="Open Kesav's Instagram"
                 whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
                 style={{ '--slide-fill': '#FFD60A' }}
-                className="btn-slide-fill group/ig flex-1 min-h-[48px] px-3.5 py-2.5 rounded-xl border-2.5 border-[#111111] bg-[#FF3D81] text-[#111111] shadow-[3px_3px_0px_#111111] flex items-center justify-between gap-3 cursor-pointer select-none font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] transition-shadow"
+                className="btn-slide-fill group/ig w-full min-h-[48px] px-3.5 py-2.5 rounded-xl border-2.5 border-[#111111] bg-[#FF3D81] text-[#111111] shadow-[3px_3px_0px_#111111] flex items-center justify-between gap-3 cursor-pointer select-none font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] transition-shadow"
               >
                 <div className="flex items-center gap-3">
                   <motion.span
@@ -365,19 +276,17 @@ export default function ContactSection({ isDark }) {
                   <span className="text-[#111111] leading-tight">Follow on Instagram</span>
                 </div>
                 <ArrowUpRight
-                  className={`w-4 h-4 text-[#111111] shrink-0 ${
-                    shouldReduceMotion ? '' : 'transition-transform duration-150 group-hover/ig:translate-x-1 group-hover/ig:-translate-y-1'
-                  }`}
+                  className={`w-4 h-4 text-[#111111] shrink-0 ${shouldReduceMotion ? '' : 'transition-transform duration-150 group-hover/ig:translate-x-1 group-hover/ig:-translate-y-1'
+                    }`}
                 />
               </motion.a>
             </div>
 
             {/* Studio Note Card */}
-            <div className={`p-5 rounded-xl font-mono text-xs transition-colors ${
-              isDark
+            <div className={`p-5 rounded-xl font-mono text-xs transition-colors ${isDark
                 ? 'bg-[#1A1815] border border-[#2E2A24] text-[#C9BFAE]'
                 : 'bg-paper border-3 border-ink text-ink shadow-[5px_5px_0px_#FF3D81]'
-            }`}>
+              }`}>
               <div className={`font-bold uppercase tracking-[var(--track-label)] mb-1 ${isDark ? 'text-pink' : 'text-ink'}`}>
                 LOCATION &amp; SCOPE
               </div>
@@ -389,23 +298,19 @@ export default function ContactSection({ isDark }) {
 
           {/* Column 2: Interactive Contact Form (7 cols) */}
           <div className="lg:col-span-7">
-            <div className={`rounded-xl p-6 sm:p-8 transition-all ${
-              isDark
+            <div className={`rounded-xl p-6 sm:p-8 transition-all ${isDark
                 ? 'bg-[#1A1815] border border-[#2E2A24] shadow-[0_0_32px_rgba(255,214,10,0.15)] text-[#FFF8EC]'
                 : 'bg-paper text-ink border-3.5 border-ink shadow-[8px_8px_0px_#FFD60A]'
-            }`}>
-              <div className={`flex items-center justify-between pb-4 mb-6 border-b ${
-                isDark ? 'border-[#2E2A24]' : 'border-ink'
               }`}>
+              <div className={`flex items-center justify-between pb-4 mb-6 border-b ${isDark ? 'border-[#2E2A24]' : 'border-ink'
+                }`}>
                 <div>
-                  <h3 className={`font-headline text-2xl sm:text-3xl uppercase tracking-[var(--track-heading)] ${
-                    isDark ? 'text-[#FFF8EC]' : 'text-ink'
-                  }`}>
+                  <h3 className={`font-headline text-2xl sm:text-3xl uppercase tracking-[var(--track-heading)] ${isDark ? 'text-[#FFF8EC]' : 'text-ink'
+                    }`}>
                     START A CONVERSATION
                   </h3>
-                  <p className={`font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mt-0.5 ${
-                    isDark ? 'text-[#C9BFAE]' : 'text-ink/75'
-                  }`}>
+                  <p className={`font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mt-0.5 ${isDark ? 'text-[#C9BFAE]' : 'text-ink/75'
+                    }`}>
                     Wired to /api/contact &bull; Resend Verified
                   </p>
                 </div>
@@ -491,13 +396,12 @@ export default function ContactSection({ isDark }) {
                   <div className={`relative ${fieldErrors.name ? 'animate-error-shake' : ''}`}>
                     <label
                       htmlFor="name"
-                      className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mb-1.5 transition-all duration-200 ${
-                        focusedField === 'name' || formData.name
+                      className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mb-1.5 transition-all duration-200 ${focusedField === 'name' || formData.name
                           ? 'text-pink scale-95 origin-left'
                           : isDark
                             ? 'text-[#FFF8EC]'
                             : 'text-ink'
-                      }`}
+                        }`}
                     >
                       {contact.formCopy.nameLabel} <span className="text-pink">*</span>
                     </label>
@@ -515,13 +419,11 @@ export default function ContactSection({ isDark }) {
                       onBlur={() => setFocusedField(null)}
                       onChange={handleChange}
                       placeholder="e.g. Arun Kumar"
-                      className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 transition-all duration-200 ${
-                        fieldErrors.name ? 'border-pink ring-2 ring-pink' : ''
-                      } ${
-                        isDark
+                      className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 transition-all duration-200 ${fieldErrors.name ? 'border-pink ring-2 ring-pink' : ''
+                        } ${isDark
                           ? 'bg-[#14120F] text-[#FFF8EC] border-[#2E2A24] placeholder-[#C9BFAE]/40 focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink focus:ring-offset-2 focus:ring-offset-[#1A1815]'
                           : 'bg-white text-ink border-2.5 border-ink shadow-[2px_2px_0px_#111111] focus:border-pink focus:bg-pink/5 focus:outline-none'
-                      }`}
+                        }`}
                     />
                     {fieldErrors.name && (
                       <p id="name-error" className="mt-1.5 font-mono text-xs font-bold text-pink flex items-center gap-1">
@@ -534,13 +436,12 @@ export default function ContactSection({ isDark }) {
                   <div className={`relative ${fieldErrors.email ? 'animate-error-shake' : ''}`}>
                     <label
                       htmlFor="email"
-                      className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mb-1.5 transition-all duration-200 ${
-                        focusedField === 'email' || formData.email
+                      className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mb-1.5 transition-all duration-200 ${focusedField === 'email' || formData.email
                           ? 'text-pink scale-95 origin-left'
                           : isDark
                             ? 'text-[#FFF8EC]'
                             : 'text-ink'
-                      }`}
+                        }`}
                     >
                       {contact.formCopy.emailLabel} <span className="text-pink">*</span>
                     </label>
@@ -556,13 +457,11 @@ export default function ContactSection({ isDark }) {
                       onBlur={() => setFocusedField(null)}
                       onChange={handleChange}
                       placeholder="arun@brand.com"
-                      className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 transition-all duration-200 ${
-                        fieldErrors.email ? 'border-pink ring-2 ring-pink' : ''
-                      } ${
-                        isDark
+                      className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 transition-all duration-200 ${fieldErrors.email ? 'border-pink ring-2 ring-pink' : ''
+                        } ${isDark
                           ? 'bg-[#14120F] text-[#FFF8EC] border-[#2E2A24] placeholder-[#C9BFAE]/40 focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink focus:ring-offset-2 focus:ring-offset-[#1A1815]'
                           : 'bg-white text-ink border-2.5 border-ink shadow-[2px_2px_0px_#111111] focus:border-pink focus:bg-pink/5 focus:outline-none'
-                      }`}
+                        }`}
                     />
                     {fieldErrors.email && (
                       <p id="email-error" className="mt-1.5 font-mono text-xs font-bold text-pink flex items-center gap-1">
@@ -576,9 +475,8 @@ export default function ContactSection({ isDark }) {
                 <div className={`relative ${fieldErrors.projectType ? 'animate-error-shake' : ''}`}>
                   <label
                     htmlFor="projectType"
-                    className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mb-1.5 ${
-                      isDark ? 'text-[#FFF8EC]' : 'text-ink'
-                    }`}
+                    className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] mb-1.5 ${isDark ? 'text-[#FFF8EC]' : 'text-ink'
+                      }`}
                   >
                     {contact.formCopy.projectTypeLabel} <span className="text-pink">*</span>
                   </label>
@@ -590,13 +488,11 @@ export default function ContactSection({ isDark }) {
                     aria-describedby={fieldErrors.projectType ? 'projectType-error' : undefined}
                     value={formData.projectType}
                     onChange={handleChange}
-                    className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 cursor-pointer transition-all duration-200 ${
-                      fieldErrors.projectType ? 'border-pink ring-2 ring-pink' : ''
-                    } ${
-                      isDark
+                    className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 cursor-pointer transition-all duration-200 ${fieldErrors.projectType ? 'border-pink ring-2 ring-pink' : ''
+                      } ${isDark
                         ? 'bg-[#14120F] text-[#FFF8EC] border-[#2E2A24] focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink focus:ring-offset-2 focus:ring-offset-[#1A1815]'
                         : 'bg-white text-ink border-2.5 border-ink shadow-[2px_2px_0px_#111111] focus:border-pink focus:outline-none'
-                    }`}
+                      }`}
                   >
                     <option value="" disabled className={isDark ? 'bg-[#1A1815] text-[#C9BFAE]' : 'bg-white text-gray-500'}>
                       Select project type...
@@ -619,25 +515,23 @@ export default function ContactSection({ isDark }) {
                   <div className="flex items-center justify-between mb-1.5">
                     <label
                       htmlFor="message"
-                      className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] transition-all duration-200 ${
-                        focusedField === 'message' || formData.message
+                      className={`block font-mono text-xs font-bold uppercase tracking-[var(--track-label)] transition-all duration-200 ${focusedField === 'message' || formData.message
                           ? 'text-pink scale-95 origin-left'
                           : isDark
                             ? 'text-[#FFF8EC]'
                             : 'text-ink'
-                      }`}
+                        }`}
                     >
                       {contact.formCopy.messageLabel} <span className="text-pink">*</span>
                     </label>
                     {/* Live character counter ("7/10 minimum" or "15 characters") */}
                     <span
-                      className={`font-mono text-xs font-bold tabular-nums tracking-wide ${
-                        formData.message.trim().length === 0
+                      className={`font-mono text-xs font-bold tabular-nums tracking-wide ${formData.message.trim().length === 0
                           ? isDark ? 'text-[#C9BFAE]/60' : 'text-ink/60'
                           : formData.message.trim().length < 10
                             ? 'text-pink font-black'
                             : isDark ? 'text-mint' : 'text-[#111111]'
-                      }`}
+                        }`}
                     >
                       {formData.message.trim().length < 10
                         ? `${formData.message.trim().length}/10 minimum`
@@ -658,13 +552,11 @@ export default function ContactSection({ isDark }) {
                     onBlur={() => setFocusedField(null)}
                     onChange={handleChange}
                     placeholder="Briefly describe your product, pack count, timeline, or goal (min 10 characters)..."
-                    className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 transition-all duration-200 resize-y min-h-[110px] ${
-                      fieldErrors.message ? 'border-pink ring-2 ring-pink' : ''
-                    } ${
-                      isDark
+                    className={`w-full px-4 py-3 font-body font-bold text-sm rounded-lg border-2 transition-all duration-200 resize-y min-h-[110px] ${fieldErrors.message ? 'border-pink ring-2 ring-pink' : ''
+                      } ${isDark
                         ? 'bg-[#14120F] text-[#FFF8EC] border-[#2E2A24] placeholder-[#C9BFAE]/40 focus:border-pink focus:outline-none focus:ring-2 focus:ring-pink focus:ring-offset-2 focus:ring-offset-[#1A1815]'
                         : 'bg-white text-ink border-2.5 border-ink shadow-[2px_2px_0px_#111111] focus:border-pink focus:bg-pink/5 focus:outline-none'
-                    }`}
+                      }`}
                   />
                   {fieldErrors.message && (
                     <p id="message-error" className="mt-1.5 font-mono text-xs font-bold text-pink flex items-center gap-1">
@@ -679,13 +571,12 @@ export default function ContactSection({ isDark }) {
                   type="submit"
                   disabled={status === 'loading'}
                   whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
-                  className={`btn-slide-fill w-full min-h-[54px] px-8 py-3.5 font-headline text-xl sm:text-2xl font-black uppercase tracking-[var(--track-button)] whitespace-nowrap rounded-lg border-2.5 border-[#111111] shadow-[4px_4px_0px_#111111] transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${
-                    status === 'success'
+                  className={`btn-slide-fill w-full min-h-[54px] px-8 py-3.5 font-headline text-xl sm:text-2xl font-black uppercase tracking-[var(--track-button)] whitespace-nowrap rounded-lg border-2.5 border-[#111111] shadow-[4px_4px_0px_#111111] transition-colors duration-150 flex items-center justify-center gap-2 cursor-pointer disabled:opacity-60 disabled:cursor-not-allowed ${status === 'success'
                       ? 'bg-mint text-[#111111]'
                       : status === 'error'
                         ? 'bg-pink text-[#111111] animate-error-shake'
                         : 'bg-yellow text-[#111111] hover:bg-mint hover:translate-x-[1px] hover:translate-y-[1px]'
-                  }`}
+                    }`}
                 >
                   {status === 'loading' ? (
                     /* 3 Bouncing Dots Loading State */
@@ -719,9 +610,8 @@ export default function ContactSection({ isDark }) {
                   )}
                 </motion.button>
 
-                <p className={`text-center font-mono text-[11px] font-semibold ${
-                  isDark ? 'text-[#C9BFAE]' : 'text-ink/75'
-                }`}>
+                <p className={`text-center font-mono text-[11px] font-semibold ${isDark ? 'text-[#C9BFAE]' : 'text-ink/75'
+                  }`}>
                   Spam protected with honeypot &amp; rate limiting &bull; No marketing spam ever
                 </p>
               </form>

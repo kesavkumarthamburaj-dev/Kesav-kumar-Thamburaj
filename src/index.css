@@ -431,7 +431,7 @@
 }
 
 /* Tabular Numbers:
-   Phone numbers, gallery tags, stats: font-variant-numeric: tabular-nums, tracking 0.02em */
+   Metrics, gallery tags, stats: font-variant-numeric: tabular-nums, tracking 0.02em */
 .tabular-nums, .number-tag {
   font-variant-numeric: tabular-nums;
   letter-spacing: 0.02em;
@@ -443,12 +443,6 @@
   letter-spacing: 0.01em;
   word-break: break-word;
   overflow-wrap: break-word;
-}
-
-.contact-phone {
-  font-variant-numeric: tabular-nums;
-  letter-spacing: 0.02em;
-  word-break: break-word;
 }
 
 /* -------------------------------------------------------------
