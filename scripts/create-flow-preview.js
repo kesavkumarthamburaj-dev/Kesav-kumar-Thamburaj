@@ -1,0 +1,36 @@
+import fs from 'fs';
+import path from 'path';
+
+// Let's create a test html page that renders the logos
+const html = `<!DOCTYPE html>
+<html>
+<head>
+<title>Logo Inspection</title>
+<style>
+body { background: #333; color: white; font-family: sans-serif; padding: 20px; }
+.card { display: inline-block; background: #222; border: 1px solid #444; border-radius: 8px; margin: 10px; padding: 15px; text-align: center; vertical-align: top; width: 220px; }
+.preview { width: 100px; height: 100px; margin: 0 auto 10px; display: flex; align-items: center; justify-content: center; background: #111; border: 1px dashed #555; }
+.preview img, .preview svg { max-width: 90px; max-height: 90px; }
+h3 { margin: 5px 0; font-size: 14px; }
+p { font-size: 11px; color: #aaa; word-break: break-all; }
+</style>
+</head>
+<body>
+<h1>Candidate Logos</h1>
+<div class="card">
+  <div class="preview"><img src="https://www.gstatic.com/aitestkitchen/website/flow/favicon/flow_favicon_b.png" style="filter: invert(1);" /></div>
+  <h3>Flow Favicon B (inverted)</h3>
+</div>
+<div class="card">
+  <div class="preview"><img src="https://www.gstatic.com/aitestkitchen/website/flow/favicon/flow_favicon_w.png" /></div>
+  <h3>Flow Favicon W</h3>
+</div>
+<div class="card">
+  <div class="preview"><img src="https://upload.wikimedia.org/wikipedia/commons/5/52/Google_Flow_logo.svg" /></div>
+  <h3>Flow Logo SVG (Wiki)</h3>
+</div>
+</body>
+</html>`;
+
+fs.writeFileSync('scripts/preview-flow.html', html);
+console.log('Written scripts/preview-flow.html');
