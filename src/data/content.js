@@ -419,7 +419,11 @@ export const portfolioContent = {
           { name: "Antigravity", logo: "/logos/antigravity.svg" },
           { name: "Codex", logo: "/logos/codex.svg" },
           { name: "Gemini", logo: "/logos/gemini.svg" },
-          { name: "Flow", logo: "/logos/flow.svg" },
+          {
+            name: "Flow",
+            logo: "/logos/flow.svg",
+            tileBg: { light: "#111111", dark: "#1A1815" },
+          },
           { name: "Higgsfield", logo: "/logos/higgsfield.svg" },
         ],
       },

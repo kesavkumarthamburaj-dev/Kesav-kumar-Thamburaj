@@ -6,10 +6,10 @@ import Reveal from './Reveal';
 
 /**
  * 40x40px rounded-square logo tile:
- * - 40x40px, border-radius 10px, background #FFF8EC (paper) with 6px padding.
- * - In dark mode: keep paper tile and add 1px border #2E2A24.
+ * - 40x40px, border-radius 10px, background #FFF8EC (paper) with 6px padding (overridable via tool.tileBg).
+ * - In dark mode: keep paper tile (or dark tile if tileBg set) and add 1px border #2E2A24.
  * - Rendered with <img> (width/height set, loading="lazy", decoding="async", alt="<Tool> logo").
- * - Fallback tile: if logo fails or is missing, show first letter of tool name, bold, on column strip color.
+ * - Fallback tile: if logo fails, is missing, or naturalWidth is 0, show first letter of tool name, bold, on column strip color.
  */
 function LogoTile({ tool, stripColor, stripTextColor, isDark }) {
   const [imgError, setImgError] = useState(false);
@@ -30,11 +30,75 @@ function LogoTile({ tool, stripColor, stripTextColor, isDark }) {
     );
   }
 
+  // Support per-tool tileBg option: { light, dark } or string override
+  const customTileBg = typeof tool.tileBg === 'object' && tool.tileBg !== null
+    ? (isDark ? tool.tileBg.dark : tool.tileBg.light)
+    : tool.tileBg;
+  const tileBackground = customTileBg || '#FFF8EC';
+
+  const handleImageLoad = (e) => {
+    const img = e.currentTarget;
+    // Fallback if image loads with naturalWidth of 0 (empty or invalid image)
+    if (!img.naturalWidth || img.naturalWidth === 0) {
+      setImgError(true);
+      return;
+    }
+
+    // Dev-only console warning for any logo that renders fully transparent or fully white on its tile
+    if (import.meta.env.DEV) {
+      try {
+        const canvas = document.createElement('canvas');
+        canvas.width = 24;
+        canvas.height = 24;
+        const ctx = canvas.getContext('2d', { willReadFrequently: true });
+        if (ctx) {
+          ctx.drawImage(img, 0, 0, 24, 24);
+          const { data } = ctx.getImageData(0, 0, 24, 24);
+          let nonTransparentCount = 0;
+          let whiteOrLightCount = 0;
+          for (let i = 0; i < data.length; i += 4) {
+            const alpha = data[i + 3];
+            if (alpha > 15) {
+              nonTransparentCount++;
+              const r = data[i];
+              const g = data[i + 1];
+              const b = data[i + 2];
+              if (r > 240 && g > 240 && b > 240) {
+                whiteOrLightCount++;
+              }
+            }
+          }
+
+          if (nonTransparentCount === 0) {
+            console.warn(
+              `[Arsenal] Logo for "${tool.name}" rendered fully transparent on its tile! (${tool.logo})`
+            );
+          } else {
+            // If the tile is light (#FFF8EC / white) and pixels are overwhelmingly white/light
+            const isTileLight = !customTileBg || tileBackground.toLowerCase() === '#fff8ec' || tileBackground.toLowerCase() === '#ffffff';
+            if (isTileLight && whiteOrLightCount / nonTransparentCount > 0.9) {
+              console.warn(
+                `[Arsenal] Logo for "${tool.name}" rendered fully white/light on its light tile (${tileBackground}), making it invisible! Consider setting tileBg in content.js.`
+              );
+            }
+          }
+        }
+      } catch {
+        // Ignore canvas CORS or read issues
+      }
+    }
+  };
+
   return (
     <div
-      className={`w-10 h-10 min-w-[40px] min-h-[40px] max-w-[40px] max-h-[40px] rounded-[10px] p-[6px] bg-[#FFF8EC] flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shrink-0 select-none overflow-hidden ${
-        isDark ? 'border border-[#2E2A24]' : 'border border-black/10 shadow-sm'
+      className={`w-10 h-10 min-w-[40px] min-h-[40px] max-w-[40px] max-h-[40px] rounded-[10px] p-[6px] flex items-center justify-center transition-transform duration-200 group-hover:scale-110 shrink-0 select-none overflow-hidden ${
+        customTileBg
+          ? (isDark ? 'border border-[#2E2A24]' : 'border border-[#111111]/30 shadow-sm')
+          : (isDark ? 'border border-[#2E2A24]' : 'border border-black/10 shadow-sm')
       }`}
+      style={{
+        backgroundColor: tileBackground,
+      }}
     >
       <img
         src={tool.logo}
@@ -43,6 +107,7 @@ function LogoTile({ tool, stripColor, stripTextColor, isDark }) {
         height={40}
         loading="lazy"
         decoding="async"
+        onLoad={handleImageLoad}
         onError={() => setImgError(true)}
         className="w-full h-full object-contain"
       />
@@ -191,7 +256,7 @@ export default function ArsenalSection({ isDark }) {
 
               {/* Chunky Chips: Wrap 2 per row on mobile/tablet, 1 per row in 4-col desktop */}
               <div
-                className={`p-4 sm:p-5 flex-1 flex flex-col justify-between ${
+                className={`p-4 sm:p-5 flex-1 flex flex-col ${
                   isDark ? 'bg-[#1A1815]' : 'bg-paper'
                 }`}
               >
@@ -206,15 +271,6 @@ export default function ArsenalSection({ isDark }) {
                       index={tIdx}
                     />
                   ))}
-                </div>
-
-                <div
-                  className={`mt-8 pt-4 border-t flex items-center justify-between font-mono text-[11px] font-bold uppercase tracking-[var(--track-label)] ${
-                    isDark ? 'border-[#2E2A24] text-[#C9BFAE]' : 'border-ink/15 text-ink/70'
-                  }`}
-                >
-                  <span>OFFICIAL BRAND KIT</span>
-                  <span>100% PROFICIENT</span>
                 </div>
               </div>
             </motion.div>
