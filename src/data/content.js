@@ -10,7 +10,7 @@ export const SITE_URL = "https://kesav-kumar-thamburaj.vercel.app";
 
 const socialLinks = {
   instagram: "https://www.instagram.com/kesavkumarthamburaj/",
-  linkedin: "https://www.linkedin.com/in/YOUR-PROFILE/", // Replace with your real LinkedIn profile URL
+  linkedin: "https://www.linkedin.com/in/kesavkumart/",
 };
 
 /**
@@ -59,6 +59,7 @@ const showPlaceholders =
   (typeof process !== 'undefined' && process.env && process.env.VITE_SHOW_PLACEHOLDERS === 'true');
 
 export const testimonialsList = showPlaceholders ? placeholderTestimonials : [];
+export const testimonials = testimonialsList;
 
 export const portfolioContent = {
   motion: motionConfig,
@@ -349,12 +350,12 @@ export const portfolioContent = {
     ],
   },
 
-  testimonials: {
+  testimonials: Object.assign([...testimonialsList], {
     sectionId: "testimonials",
     tag: "CLIENT VOICES",
     headline: "KIND WORDS",
     items: testimonialsList,
-  },
+  }),
 
   arsenal: {
     sectionId: "arsenal",

@@ -147,16 +147,18 @@ async function runFullSuite() {
     console.log('Testimonials section in DOM (expect false):', checkTestimonials.result.value.sectionExists);
     console.log('Nav contains Kind Words (expect false):', checkTestimonials.result.value.navHasKindWords);
 
-    // Check LinkedIn is hidden while placeholder
+    // Check LinkedIn is visible and links correctly
     const checkLinkedIn = await cdp.send('Runtime.evaluate', {
       expression: `({
         linkedInBtnInContact: document.querySelector('a[aria-label*="LinkedIn" i]') !== null,
-        schemaHasLinkedIn: (document.getElementById('json-ld-schema')?.textContent || '').includes('linkedin.com'),
+        linkedInHref: document.querySelector('a[aria-label*="LinkedIn" i]')?.href,
+        schemaHasLinkedIn: (document.getElementById('json-ld-schema')?.textContent || '').includes('https://www.linkedin.com/in/kesavkumart/'),
       })`,
       returnByValue: true,
     });
-    console.log('LinkedIn button in DOM (expect false):', checkLinkedIn.result.value.linkedInBtnInContact);
-    console.log('Schema has LinkedIn (expect false):', checkLinkedIn.result.value.schemaHasLinkedIn);
+    console.log('LinkedIn button in DOM (expect true):', checkLinkedIn.result.value.linkedInBtnInContact);
+    console.log('LinkedIn href:', checkLinkedIn.result.value.linkedInHref);
+    console.log('Schema has LinkedIn (expect true):', checkLinkedIn.result.value.schemaHasLinkedIn);
 
     // ----------------------------------------------------
     // TEST 2: THEME TOGGLE (LIGHT & DARK)

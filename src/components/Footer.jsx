@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { ArrowUp, Sparkles, MapPin } from 'lucide-react';
 import { portfolioContent, isRealUrl } from '../data/content.js';
 
 export default function Footer({ isDark, onOpenPrivacy }) {
   const { profile } = portfolioContent;
+  const [igLogoError, setIgLogoError] = useState(false);
+  const [liLogoError, setLiLogoError] = useState(false);
 
   const scrollToTop = () => {
     window.scrollTo({ top: 0, behavior: 'smooth' });
@@ -58,11 +60,15 @@ export default function Footer({ isDark, onOpenPrivacy }) {
                 target="_blank"
                 rel="noopener noreferrer"
                 aria-label="Open Kesav's Instagram"
-                className="w-11 h-11 rounded-lg bg-[#FF3D81] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+                className="w-11 h-11 rounded-lg bg-[#FF3D81] text-[#111111] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
                 title="Follow on Instagram"
               >
                 <span className="w-8 h-8 rounded-md bg-[#111111] flex items-center justify-center">
-                  <img src="/logos/instagram.svg" width={20} height={20} alt="Instagram logo" className="w-5 h-5 pointer-events-none" />
+                  {!igLogoError ? (
+                    <img src="/logos/instagram.svg" width={20} height={20} alt="Instagram logo" className="w-5 h-5 pointer-events-none" onError={() => setIgLogoError(true)} />
+                  ) : (
+                    <span className="font-headline font-black text-white text-base leading-none select-none">I</span>
+                  )}
                 </span>
               </a>
 
@@ -73,11 +79,15 @@ export default function Footer({ isDark, onOpenPrivacy }) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label="Open Kesav's LinkedIn"
-                  className="w-11 h-11 rounded-lg bg-[#2F5BFF] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+                  className="w-11 h-11 rounded-lg bg-[#2F5BFF] text-white border-2 border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
                   title="Connect on LinkedIn"
                 >
                   <span className="w-8 h-8 rounded-md bg-[#111111] flex items-center justify-center">
-                    <img src="/logos/linkedin.svg" width={20} height={20} alt="LinkedIn logo" className="w-5 h-5 pointer-events-none" />
+                    {!liLogoError ? (
+                      <img src="/logos/linkedin.svg" width={20} height={20} alt="LinkedIn logo" className="w-5 h-5 pointer-events-none" onError={() => setLiLogoError(true)} />
+                    ) : (
+                      <span className="font-headline font-black text-white text-base leading-none select-none">L</span>
+                    )}
                   </span>
                 </a>
               )}
