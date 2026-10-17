@@ -12,8 +12,8 @@ async function run() {
 
   testimonialsList.forEach((t, i) => {
     console.log(`Card ${i + 1}: [${t.project}] "${t.quote}" — ${t.name} (${t.role}, ${t.company})`);
-    if (t.quote.length > 220) {
-      console.error(`Quote ${i + 1} exceeds 220 chars! Length: ${t.quote.length}`);
+    if (t.quote.length > 320) {
+      console.error(`Quote ${i + 1} exceeds 320 chars! Length: ${t.quote.length}`);
       process.exit(1);
     }
   });
@@ -23,3 +23,4 @@ async function run() {
 }
 
 run();
+

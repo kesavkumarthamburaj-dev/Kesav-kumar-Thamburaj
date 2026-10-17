@@ -151,36 +151,6 @@ export default function App() {
       },
     ];
 
-    const isPlaceholderMode =
-      (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_SHOW_PLACEHOLDERS === 'true') ||
-      (typeof process !== 'undefined' && process.env && process.env.VITE_SHOW_PLACEHOLDERS === 'true');
-    const realReviews = isPlaceholderMode ? [] : (portfolioContent.testimonials?.items || []);
-
-    realReviews.forEach((rev) => {
-      graph.push({
-        "@context": "https://schema.org",
-        "@type": "Review",
-        "itemReviewed": {
-          "@type": "Person",
-          "name": portfolioContent.profile.name,
-        },
-        "reviewBody": rev.quote,
-        "author": {
-          "@type": "Person",
-          "name": rev.name,
-          "jobTitle": rev.role,
-          ...(rev.company
-            ? {
-                "worksFor": {
-                  "@type": "Organization",
-                  "name": rev.company,
-                },
-              }
-            : {}),
-        },
-      });
-    });
-
     script.textContent = JSON.stringify({
       "@context": "https://schema.org",
       "@graph": graph,

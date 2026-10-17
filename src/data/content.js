@@ -54,11 +54,28 @@ const placeholderTestimonials = [
   },
 ];
 
+const realTestimonials = [
+  {
+    quote: "The custom quotation application has streamlined our engineering quotation workflow. Managing raw-material prices, calculating multi-component BOM costs, and generating quotations has become more organized and efficient. The automated GST calculations and export features make our estimation process much easier.",
+    name: "Anand Kumar",
+    role: "Owner",
+    company: "Krishna Engineering",
+    project: "Custom Engineering Quotation Software",
+  },
+  {
+    quote: "The quotation application has made it easier for our field sales team to prepare quotations directly from the factory floor. The offline functionality is especially useful when internet connectivity is limited, while automatic synchronization keeps our data updated.",
+    name: "Anand Kumar",
+    role: "Owner",
+    company: "Vishakha Industries, Coimbatore",
+    project: "Mobile-First Quotation Application",
+  },
+];
+
 const showPlaceholders =
   (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_SHOW_PLACEHOLDERS === 'true') ||
   (typeof process !== 'undefined' && process.env && process.env.VITE_SHOW_PLACEHOLDERS === 'true');
 
-export const testimonialsList = showPlaceholders ? placeholderTestimonials : [];
+export const testimonialsList = showPlaceholders ? placeholderTestimonials : realTestimonials;
 export const testimonials = testimonialsList;
 
 export const portfolioContent = {

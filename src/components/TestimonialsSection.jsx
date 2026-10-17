@@ -1,6 +1,6 @@
 import React from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
-import { MessageSquareQuote, Quote } from 'lucide-react';
+import { Quote } from 'lucide-react';
 import { portfolioContent } from '../data/content';
 import MaskedHeadline from './MaskedHeadline';
 
@@ -12,79 +12,93 @@ const PROJECT_TAG_STYLES = {
   Software: 'bg-[#FF3D81] text-[#111111] border-[#111111]',
 };
 
-// Rotations applied to alternating cards for poster-wall rhythm (-2deg, +2deg, -1.5deg)
-const CARD_ROTATIONS = [-2, 2, -1.5, 1.8, -2.2, 1.5];
+function getProjectTagStyle(project, isDark) {
+  if (!project) return '';
+  if (PROJECT_TAG_STYLES[project]) return PROJECT_TAG_STYLES[project];
+  if (/software|quotation|application|app/i.test(project)) {
+    return 'bg-[#FF3D81] text-[#111111] border-[#111111]';
+  }
+  if (/packaging/i.test(project)) {
+    return 'bg-[#FFD60A] text-[#111111] border-[#111111]';
+  }
+  if (/video/i.test(project)) {
+    return 'bg-[#2F5BFF] text-white border-[#111111]';
+  }
+  return isDark
+    ? 'bg-[#3DDC97] text-[#111111] border-[#111111]'
+    : 'bg-[#FFD60A] text-[#111111] border-[#111111]';
+}
+
+function formatRoleCompany(role, company) {
+  const parts = [role, company]
+    .map((s) => (typeof s === 'string' ? s.trim() : ''))
+    .filter(Boolean);
+  return parts.join(', ');
+}
 
 function TestimonialCard({ item, index, isDark, shouldReduceMotion }) {
-  const initialRotation = shouldReduceMotion ? 0 : CARD_ROTATIONS[index % CARD_ROTATIONS.length];
-  const tagStyle = PROJECT_TAG_STYLES[item.project] || 'bg-[#FFF8EC] text-[#111111] border-[#111111]';
-  const initialLetter = item.name ? item.name.trim().charAt(0).toUpperCase() : 'C';
+  // Alternating card rotation (-2deg / +2deg), straightens on hover
+  const initialRotation = shouldReduceMotion ? 0 : (index % 2 === 0 ? -2 : 2);
+  const tagStyle = getProjectTagStyle(item.project, isDark);
+  const roleCompany = formatRoleCompany(item.role, item.company);
 
-  // Truncate to maximum 220 characters as required
-  const displayQuote = item.quote && item.quote.length > 220
-    ? `${item.quote.slice(0, 217).trim()}...`
+  // Quote limit raised to 320 characters
+  const MAX_QUOTE_LENGTH = 320;
+  const displayQuote = item.quote && item.quote.length > MAX_QUOTE_LENGTH
+    ? `${item.quote.slice(0, MAX_QUOTE_LENGTH - 3).trim()}...`
     : item.quote;
 
   return (
     <motion.article
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88, y: 25, rotate: initialRotation }}
+      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88, y: 30, rotate: initialRotation }}
       whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0, rotate: initialRotation }}
       viewport={{ once: true, amount: 0.15 }}
       whileHover={shouldReduceMotion ? undefined : { rotate: 0, scale: 1.02, transition: { duration: 0.25, ease: 'easeOut' } }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: shouldReduceMotion ? 0 : index * 0.08 }}
-      className={`group relative flex flex-col justify-between p-6 sm:p-7 rounded-xl border-3 select-none transition-shadow shrink-0 w-[85vw] sm:w-[360px] md:w-auto snap-start ${
+      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: shouldReduceMotion ? 0 : index * 0.1 }}
+      className={`group relative flex flex-col justify-between p-6 sm:p-8 rounded-xl border-3 select-none transition-shadow shrink-0 w-[85vw] sm:w-[380px] md:w-auto snap-center ${
         isDark
           ? 'bg-[#181715] text-[#FFF8EC] border-[#3DDC97] shadow-[5px_5px_0px_#3DDC97]'
           : 'bg-[#FFF8EC] text-[#111111] border-[#111111] shadow-[5px_5px_0px_#111111]'
       }`}
     >
-      {/* Top row: Quote glyph + Project tag */}
-      <div className="flex items-center justify-between gap-3 mb-4">
-        <span
-          className={`w-9 h-9 rounded-lg flex items-center justify-center border-2 ${
-            isDark ? 'bg-[#3DDC97]/20 border-[#3DDC97] text-[#3DDC97]' : 'bg-[#3DDC97] border-[#111111] text-[#111111]'
+      {/* 1. Large decorative quote mark */}
+      <div className="mb-4" aria-hidden="true">
+        <Quote
+          className={`w-11 h-11 sm:w-12 sm:h-12 fill-current rotate-180 ${
+            isDark ? 'text-[#3DDC97]' : 'text-[#111111]'
           }`}
-          aria-hidden="true"
-        >
-          <Quote className="w-5 h-5 fill-current rotate-180" />
-        </span>
-
-        {item.project && (
-          <span
-            className={`px-2.5 py-0.5 rounded font-mono text-[11px] font-black uppercase tracking-wider border-2 shadow-[2px_2px_0px_#111111] ${tagStyle}`}
-          >
-            {item.project}
-          </span>
-        )}
+        />
       </div>
 
-      {/* Quote text body (Max 220 chars) */}
-      <blockquote className="flex-1 font-body text-base sm:text-lg font-medium leading-relaxed mb-6">
-        &ldquo;{displayQuote}&rdquo;
+      {/* 2. Quote in DM Sans 17px, line-height 1.6, text-wrap: pretty */}
+      <blockquote className="flex-1 font-body text-[17px] leading-[1.6] [text-wrap:pretty] font-medium mb-6">
+        {displayQuote}
       </blockquote>
 
-      {/* Author / Client meta row */}
-      <div className="pt-4 border-t-2 border-dashed border-current/20 flex items-center gap-3">
-        {/* Initial / Logo Tile */}
-        <div
-          className={`w-10 h-10 min-w-[40px] min-h-[40px] rounded-lg border-2 flex items-center justify-center font-headline font-black text-lg select-none transition-transform group-hover:scale-105 ${
-            isDark
-              ? 'bg-[#3DDC97] text-[#111111] border-[#3DDC97]'
-              : 'bg-[#FFD60A] text-[#111111] border-[#111111] shadow-[2px_2px_0px_#111111]'
-          }`}
-          aria-hidden="true"
-        >
-          {initialLetter}
+      {/* Meta: Name (bold) + "role, company" below it + project sticker tag */}
+      <div className="pt-4 border-t-2 border-dashed border-current/20 flex flex-col gap-3">
+        {/* 3. Name (bold) and "role, company" below it (skip any empty field and any stray comma) */}
+        <div>
+          <p className="font-body font-bold text-base sm:text-lg text-[#111111] dark:text-[#FFF8EC] leading-snug">
+            {item.name}
+          </p>
+          {roleCompany ? (
+            <p className="font-body text-sm text-[#55514B] dark:text-[#C9BFAE] leading-normal mt-0.5">
+              {roleCompany}
+            </p>
+          ) : null}
         </div>
 
-        <div className="flex flex-col min-w-0">
-          <cite className="not-italic font-headline text-lg leading-tight uppercase tracking-wide truncate">
-            {item.name}
-          </cite>
-          <span className="font-mono text-xs opacity-75 truncate">
-            {item.role ? `${item.role}, ` : ''}{item.company}
-          </span>
-        </div>
+        {/* 4. Project as a small sticker tag */}
+        {item.project && (
+          <div className="pt-0.5">
+            <span
+              className={`inline-block px-2.5 py-0.5 rounded font-mono text-[11px] font-black uppercase tracking-wider border-2 shadow-[2px_2px_0px_#111111] ${tagStyle}`}
+            >
+              {item.project}
+            </span>
+          </div>
+        )}
       </div>
     </motion.article>
   );
@@ -143,8 +157,7 @@ export default function TestimonialsSection({ isDark }) {
         </div>
 
         {/* Testimonials Container */}
-        {/* Mobile: Horizontal swipe carousel with snap, 1.1 cards visible */}
-        {/* Desktop: 3-column responsive grid */}
+        {/* Mobile: Horizontal swipe carousel with snap */}
         <div className="md:hidden flex overflow-x-auto snap-x snap-mandatory pb-6 gap-4 -mx-4 px-4 scrollbar-none">
           {items.map((item, idx) => (
             <TestimonialCard
@@ -157,7 +170,8 @@ export default function TestimonialsSection({ isDark }) {
           ))}
         </div>
 
-        <div className="hidden md:grid md:grid-cols-2 lg:grid-cols-3 gap-6 sm:gap-7 items-stretch">
+        {/* Desktop: 2 columns centred (max-width 960px) */}
+        <div className="hidden md:grid md:grid-cols-2 gap-6 lg:gap-8 max-w-[960px] mx-auto items-stretch">
           {items.map((item, idx) => (
             <TestimonialCard
               key={`${item.name}-${idx}`}
