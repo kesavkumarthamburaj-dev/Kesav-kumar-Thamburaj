@@ -13,34 +13,40 @@
   <meta name="author" content="Kesav Kumar T" />
   <meta name="keywords"
     content="Kesav Kumar T, Packaging Designer, FMCG Packaging, Tamil Nadu Designer, Video Editor, Software Founder, Gathex Invoice, Krishna Engineering, Vishakha Quotation, Screen Print Design, Pacdora" />
-  <link rel="canonical" href="https://kesavkumar.design/" />
+  <link rel="canonical" href="%SITE_URL%/" />
 
   <!-- Open Graph / Facebook -->
   <meta property="og:type" content="website" />
-  <meta property="og:url" content="https://kesavkumar.design/" />
+  <meta property="og:url" content="%SITE_URL%/" />
   <meta property="og:title" content="Kesav Kumar T — Packaging Designer, Video Editor &amp; Software Founder" />
   <meta property="og:description"
     content="Packaging designer, video editor and software founder from Tamil Nadu, India. Screen-printed poster wall concept." />
-  <meta property="og:image" content="/og-image.png" />
+  <meta property="og:image" content="%SITE_URL%/og-image.png" />
+  <meta property="og:image:width" content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:type" content="image/png" />
+  <meta property="og:image:alt" content="Kesav Kumar T — Packaging Designer, Video Editor &amp; Software Founder" />
   <meta property="og:site_name" content="Kesav Kumar T Portfolio" />
 
   <!-- Twitter -->
   <meta property="twitter:card" content="summary_large_image" />
-  <meta property="twitter:url" content="https://kesavkumar.design/" />
+  <meta property="twitter:url" content="%SITE_URL%/" />
   <meta property="twitter:title" content="Kesav Kumar T — Packaging Designer, Video Editor &amp; Software Founder" />
   <meta property="twitter:description"
     content="Packaging designer, video editor and software founder from Tamil Nadu, India. Screen-printed poster wall concept." />
-  <meta property="twitter:image" content="/og-image.png" />
+  <meta property="twitter:image" content="%SITE_URL%/og-image.png" />
+  <meta property="twitter:image:alt" content="Kesav Kumar T — Packaging Designer, Video Editor &amp; Software Founder" />
 
   <!-- Schema.org JSON-LD -->
-  <script type="application/ld+json">
+  <script id="json-ld-schema" type="application/ld+json">
     {
       "@context": "https://schema.org",
       "@graph": [
         {
           "@type": "Person",
           "name": "Kesav Kumar T",
-          "url": "https://kesavkumar.design/",
+          "url": "%SITE_URL%/",
+          "image": "%SITE_URL%/og-image.png",
           "jobTitle": "Packaging Designer, Video Editor & Software Founder",
           "sameAs": [
             "https://www.instagram.com/kesavkumarthamburaj/"
@@ -49,7 +55,8 @@
         {
           "@type": "ProfessionalService",
           "name": "Kesav Kumar T",
-          "url": "https://kesavkumar.design/",
+          "url": "%SITE_URL%/",
+          "image": "%SITE_URL%/og-image.png",
           "jobTitle": "Packaging Designer, Video Editor & Software Founder",
           "sameAs": [
             "https://www.instagram.com/kesavkumarthamburaj/"
@@ -61,6 +68,9 @@
 
   <!-- Favicon & Icons -->
   <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+
+  <!-- Preload Hero LCP Image -->
+  <link rel="preload" as="image" href="/kesav.webp" type="image/webp" fetchpriority="high" />
 
   <!-- Color Scheme & Theme Color -->
   <meta name="color-scheme" content="light dark" />

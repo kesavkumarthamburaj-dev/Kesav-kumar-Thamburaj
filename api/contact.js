@@ -166,7 +166,7 @@ ${cleanMessage}
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; max-width: 600px; margin: 0 auto; padding: 24px; border: 2px solid #111111; background-color: #FFF8EC; color: #111111;">
         <div style="background-color: #FFD60A; padding: 16px; border-bottom: 2px solid #111111; margin: -24px -24px 20px -24px;">
           <h2 style="margin: 0; font-size: 24px; font-weight: 800; text-transform: uppercase; letter-spacing: -0.5px;">New Portfolio Enquiry</h2>
-          <p style="margin: 4px 0 0 0; font-size: 14px; color: #111111;">Received from kesavkumar.design portfolio</p>
+          <p style="margin: 4px 0 0 0; font-size: 14px; color: #111111;">Received from Kesav Kumar T Portfolio</p>
         </div>
         
         <table style="width: 100%; border-collapse: collapse; margin-bottom: 20px; font-size: 15px;">

@@ -4,6 +4,7 @@ import HeroSection from './components/HeroSection';
 import PackagingSection from './components/PackagingSection';
 import CreativesSection from './components/CreativesSection';
 import SoftwareSection from './components/SoftwareSection';
+import TestimonialsSection from './components/TestimonialsSection';
 import ArsenalSection from './components/ArsenalSection';
 import ContactSection from './components/ContactSection';
 import Footer from './components/Footer';
@@ -15,18 +16,27 @@ import CustomCursor from './components/CustomCursor';
 import FloatingToolsLayer from './components/FloatingToolsLayer';
 import WelcomeCard from './components/WelcomeCard';
 import PrivacyModal from './components/PrivacyModal';
-import { portfolioContent } from './data/content';
+import { portfolioContent, isRealUrl, SITE_URL } from './data/content.js';
 
 const AdminVisitorsDashboard = lazy(() => import('./components/AdminVisitorsDashboard'));
 
 export default function App() {
   // Check if visitor is accessing the private admin portal
-  const [isAdminRoute] = useState(() => {
+  const [isAdminRoute, setIsAdminRoute] = useState(() => {
     if (typeof window !== 'undefined') {
       return window.location.pathname.startsWith('/admin/visitors');
     }
     return false;
   });
+
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    const handleLocationChange = () => {
+      setIsAdminRoute(window.location.pathname.startsWith('/admin/visitors'));
+    };
+    window.addEventListener('popstate', handleLocationChange);
+    return () => window.removeEventListener('popstate', handleLocationChange);
+  }, []);
 
   // Privacy modal state
   const [isPrivacyOpen, setIsPrivacyOpen] = useState(false);
@@ -103,6 +113,79 @@ export default function App() {
   const toggleTheme = () => {
     setIsDark((prev) => !prev);
   };
+
+  // Synchronize Schema.org JSON-LD dynamically (Person, ProfessionalService, and real Reviews only)
+  useEffect(() => {
+    if (typeof window === 'undefined') return;
+    let script = document.getElementById('json-ld-schema');
+    if (!script) {
+      script = document.createElement('script');
+      script.id = 'json-ld-schema';
+      script.type = 'application/ld+json';
+      document.head.appendChild(script);
+    }
+
+    const sameAsList = [portfolioContent.social.instagram].filter(Boolean);
+    if (isRealUrl(portfolioContent.social.linkedin)) {
+      sameAsList.push(portfolioContent.social.linkedin);
+    }
+
+    const graph = [
+      {
+        "@context": "https://schema.org",
+        "@type": "Person",
+        "name": portfolioContent.profile.name,
+        "url": `${SITE_URL}/`,
+        "image": `${SITE_URL}/og-image.png`,
+        "jobTitle": portfolioContent.profile.title,
+        "sameAs": sameAsList,
+      },
+      {
+        "@context": "https://schema.org",
+        "@type": "ProfessionalService",
+        "name": portfolioContent.profile.name,
+        "url": `${SITE_URL}/`,
+        "image": `${SITE_URL}/og-image.png`,
+        "jobTitle": portfolioContent.profile.title,
+        "sameAs": sameAsList,
+      },
+    ];
+
+    const isPlaceholderMode =
+      (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_SHOW_PLACEHOLDERS === 'true') ||
+      (typeof process !== 'undefined' && process.env && process.env.VITE_SHOW_PLACEHOLDERS === 'true');
+    const realReviews = isPlaceholderMode ? [] : (portfolioContent.testimonials?.items || []);
+
+    realReviews.forEach((rev) => {
+      graph.push({
+        "@context": "https://schema.org",
+        "@type": "Review",
+        "itemReviewed": {
+          "@type": "Person",
+          "name": portfolioContent.profile.name,
+        },
+        "reviewBody": rev.quote,
+        "author": {
+          "@type": "Person",
+          "name": rev.name,
+          "jobTitle": rev.role,
+          ...(rev.company
+            ? {
+                "worksFor": {
+                  "@type": "Organization",
+                  "name": rev.company,
+                },
+              }
+            : {}),
+        },
+      });
+    });
+
+    script.textContent = JSON.stringify({
+      "@context": "https://schema.org",
+      "@graph": graph,
+    });
+  }, []);
 
   const [isMobile, setIsMobile] = useState(() => {
     if (typeof window !== 'undefined') return window.innerWidth < 1024;
@@ -206,12 +289,26 @@ export default function App() {
           onOpenProductModal={(product) => setActiveProduct(product)}
         />
 
-        {/* Torn Edge Transition: Software -> Arsenal */}
-        {/* Dark tints: software #22120A -> arsenal #14120F */}
-        <TornEdge
-          color={isDark ? '#14120F' : '#FFF8EC'}
-          bgColor={isDark ? '#22120A' : '#FF7A1A'}
-        />
+        {/* 4.5 TESTIMONIALS (Kind Words) - Rendered only when client items exist */}
+        {portfolioContent.testimonials?.items?.length > 0 ? (
+          <>
+            <TornEdge
+              color={isDark ? '#0B1D15' : '#3DDC97'}
+              bgColor={isDark ? '#22120A' : '#FF7A1A'}
+            />
+            <TestimonialsSection isDark={isDark} />
+            <TornEdge
+              color={isDark ? '#14120F' : '#FFF8EC'}
+              bgColor={isDark ? '#0B1D15' : '#3DDC97'}
+            />
+          </>
+        ) : (
+          /* Torn Edge Transition: Software -> Arsenal directly */
+          <TornEdge
+            color={isDark ? '#14120F' : '#FFF8EC'}
+            bgColor={isDark ? '#22120A' : '#FF7A1A'}
+          />
+        )}
 
         {/* 5. ARSENAL (#FFF8EC light, #14120F dark) */}
         <ArsenalSection isDark={isDark} />

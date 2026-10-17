@@ -25,7 +25,11 @@ export default function Navbar({ isDark, onToggleDark }) {
       }
       lastScrollY.current = currentScrollY;
 
-      const sectionIds = ['hero', 'packaging', 'creatives', 'software', 'arsenal', 'contact'];
+      const sectionIds = ['hero', 'packaging', 'creatives', 'software'];
+      if (portfolioContent.testimonials?.items?.length > 0) {
+        sectionIds.push('testimonials');
+      }
+      sectionIds.push('arsenal', 'contact');
       const scrollPosition = currentScrollY + 220;
 
       for (let i = sectionIds.length - 1; i >= 0; i--) {

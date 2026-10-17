@@ -7,20 +7,29 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
+# Dependencies and Builds
 node_modules
 dist
 dist-ssr
-*.local
+
+# Environment and Local Secrets
 .env
 .env.*
+.env.local
+.env*.local
 !.env.example
+*.local
+
+# Browser testing profiles & temp assets
+.chrome*
+.chrome-*
 temp_assets
 temp_*
 canva_extracted
 *_extracted
 *.zip
-.chrome*
 scratch/
+lighthouse-report.json
 
 # Editor directories and files
 .vscode/*
@@ -33,3 +42,6 @@ scratch/
 *.njsproj
 *.sln
 *.sw?
+
+# Vercel
+.vercel

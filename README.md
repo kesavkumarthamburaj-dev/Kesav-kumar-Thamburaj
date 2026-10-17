@@ -133,8 +133,10 @@ Deploying this portfolio to Vercel takes under 2 minutes:
 4. **Click Deploy**:
    Vercel will build the frontend, deploy the `/api/contact.js` serverless function, and assign a production URL (e.g., `kesav-portfolio.vercel.app`).
 
-5. **Custom Domain (Optional)**:
-   In Vercel **Settings &rarr; Domains**, add your custom domain (such as `kesavkumar.design`) and follow the DNS records (CNAME / A records).
+5. **Custom Domain**:
+   In Vercel **Settings &rarr; Domains**, add your custom domain and follow the DNS records (CNAME / A records).
+
+   > **Note**: When the custom domain is live: change SITE_URL, redeploy, and re-submit the sitemap in Google Search Console.
 
 ---
 

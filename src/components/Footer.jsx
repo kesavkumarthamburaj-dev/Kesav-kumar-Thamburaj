@@ -1,6 +1,6 @@
 import React from 'react';
 import { ArrowUp, Sparkles, MapPin } from 'lucide-react';
-import { portfolioContent } from '../data/content';
+import { portfolioContent, isRealUrl } from '../data/content.js';
 
 export default function Footer({ isDark, onOpenPrivacy }) {
   const { profile } = portfolioContent;
@@ -53,7 +53,6 @@ export default function Footer({ isDark, onOpenPrivacy }) {
 
             {/* Social Icons Row */}
             <div className="flex items-center gap-3 pt-2">
-
               <a
                 href={portfolioContent.social?.instagram || profile.instagramUrl}
                 target="_blank"
@@ -66,6 +65,22 @@ export default function Footer({ isDark, onOpenPrivacy }) {
                   <img src="/logos/instagram.svg" width={20} height={20} alt="Instagram logo" className="w-5 h-5 pointer-events-none" />
                 </span>
               </a>
+
+              {/* LinkedIn Button (Shown only when URL is real) */}
+              {isRealUrl(portfolioContent.social?.linkedin || profile.linkedinUrl) && (
+                <a
+                  href={portfolioContent.social?.linkedin || profile.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open Kesav's LinkedIn"
+                  className="w-11 h-11 rounded-lg bg-[#2F5BFF] border-2 border-[#111111] shadow-[2px_2px_0px_#111111] flex items-center justify-center hover:scale-105 active:scale-95 transition-transform"
+                  title="Connect on LinkedIn"
+                >
+                  <span className="w-8 h-8 rounded-md bg-[#111111] flex items-center justify-center">
+                    <img src="/logos/linkedin.svg" width={20} height={20} alt="LinkedIn logo" className="w-5 h-5 pointer-events-none" />
+                  </span>
+                </a>
+              )}
             </div>
           </div>
 
@@ -116,6 +131,20 @@ export default function Footer({ isDark, onOpenPrivacy }) {
                   <span>Instagram &rarr;</span>
                 </a>
               </li>
+              {isRealUrl(portfolioContent.social?.linkedin || profile.linkedinUrl) && (
+                <li>
+                  <a
+                    href={portfolioContent.social?.linkedin || profile.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    aria-label="Open Kesav's LinkedIn"
+                    className="text-[#2F5BFF] hover:underline inline-flex items-center gap-1.5 uppercase tracking-[var(--track-button)] whitespace-nowrap"
+                  >
+                    <img src="/logos/linkedin.svg" width={14} height={14} alt="LinkedIn logo" className="w-3.5 h-3.5 inline-block" />
+                    <span>LinkedIn &rarr;</span>
+                  </a>
+                </li>
+              )}
             </ul>
           </div>
         </div>

@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { motion, useReducedMotion } from 'framer-motion';
 import { Mail, Send, CheckCircle2, AlertCircle, Copy, Check, ArrowUpRight } from 'lucide-react';
 import confetti from 'canvas-confetti';
-import { portfolioContent } from '../data/content';
+import { portfolioContent, isRealUrl } from '../data/content.js';
 import MaskedHeadline from './MaskedHeadline';
 import Reveal from './Reveal';
 
@@ -25,6 +25,7 @@ export default function ContactSection({ isDark }) {
   const [errorMessage, setErrorMessage] = useState('');
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [igLogoError, setIgLogoError] = useState(false);
+  const [liLogoError, setLiLogoError] = useState(false);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -281,6 +282,48 @@ export default function ContactSection({ isDark }) {
                 />
               </motion.a>
             </div>
+
+            {/* Social Direct Action (LinkedIn - Shown only when URL is real) */}
+            {isRealUrl(portfolioContent.social?.linkedin || profile.linkedinUrl) && (
+              <div className="w-full">
+                <motion.a
+                  href={portfolioContent.social?.linkedin || profile.linkedinUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label="Open Kesav's LinkedIn"
+                  whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                  style={{ '--slide-fill': '#FFD60A' }}
+                  className="btn-slide-fill group/li w-full min-h-[48px] px-3.5 py-2.5 rounded-xl border-2.5 border-[#111111] bg-[#2F5BFF] text-white shadow-[3px_3px_0px_#111111] flex items-center justify-between gap-3 cursor-pointer select-none font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] transition-shadow"
+                >
+                  <div className="flex items-center gap-3">
+                    <motion.span
+                      whileHover={shouldReduceMotion ? undefined : { rotate: [-4, 4, -4, 4, 0], transition: { duration: 0.35 } }}
+                      className="w-[44px] h-[44px] min-w-[44px] min-h-[44px] rounded-lg bg-[#111111] border border-black/20 flex items-center justify-center shrink-0 shadow-inner group-hover/li:scale-105 transition-transform"
+                    >
+                      {!liLogoError ? (
+                        <img
+                          src="/logos/linkedin.svg"
+                          width={24}
+                          height={24}
+                          alt="LinkedIn logo"
+                          className="w-6 h-6 object-contain pointer-events-none"
+                          onError={() => setLiLogoError(true)}
+                        />
+                      ) : (
+                        <span className="font-headline font-black text-white text-lg leading-none select-none">
+                          L
+                        </span>
+                      )}
+                    </motion.span>
+                    <span className="text-white leading-tight">Connect on LinkedIn</span>
+                  </div>
+                  <ArrowUpRight
+                    className={`w-4 h-4 text-white shrink-0 ${shouldReduceMotion ? '' : 'transition-transform duration-150 group-hover/li:translate-x-1 group-hover/li:-translate-y-1'
+                      }`}
+                  />
+                </motion.a>
+              </div>
+            )}
 
             {/* Studio Note Card */}
             <div className={`p-5 rounded-xl font-mono text-xs transition-colors ${isDark

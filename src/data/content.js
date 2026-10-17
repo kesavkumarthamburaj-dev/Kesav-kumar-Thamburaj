@@ -2,11 +2,63 @@
 // Central source of truth for all portfolio content.
 // Edit this file to update projects, reel links, copy, tools, and URLs without touching React components.
 
-import { motionConfig, TOOL_LOGOS } from './motion.config';
+import { motionConfig, TOOL_LOGOS } from './motion.config.js';
+
+// Single source of truth for portfolio site URL (no trailing slash).
+// When your custom domain is live, change only this constant.
+export const SITE_URL = "https://kesav-kumar-thamburaj.vercel.app";
 
 const socialLinks = {
   instagram: "https://www.instagram.com/kesavkumarthamburaj/",
+  linkedin: "https://www.linkedin.com/in/YOUR-PROFILE/", // Replace with your real LinkedIn profile URL
 };
+
+/**
+ * Checks whether a URL is a real public link rather than a template placeholder or empty string.
+ */
+export function isRealUrl(url) {
+  if (!url || typeof url !== 'string') return false;
+  const trimmed = url.trim();
+  return trimmed.length > 0 && !trimmed.includes('YOUR-PROFILE') && trimmed !== '#';
+}
+
+/**
+ * Client testimonials array:
+ * Format: { quote, name, role, company, project }
+ * Per instructions: Shipped as an empty array.
+ * When empty, the entire Testimonials section AND its nav link are automatically hidden.
+ * Real client entries can be added here when received.
+ * For local dev preview only, set VITE_SHOW_PLACEHOLDERS=true in .env to view sample cards.
+ */
+const placeholderTestimonials = [
+  {
+    quote: "Kesav delivered high-impact dieline packaging that instantly dominated our retail shelf presence. Remarkable turnaround and precision.",
+    name: "Karthik Raja",
+    role: "Founder",
+    company: "Aura Organics",
+    project: "Packaging",
+  },
+  {
+    quote: "Engineered our custom quotation software with lightning-fast GST math and rock-solid offline reliability. Exceptional product builder.",
+    name: "Suresh Kumar",
+    role: "Managing Director",
+    company: "Krishna Engineering",
+    project: "App",
+  },
+  {
+    quote: "His visual sense for rhythmic social reels and campaign banners drove our strongest seasonal conversion spike to date.",
+    name: "Priya Mohan",
+    role: "Marketing Head",
+    company: "Vanam Co-op",
+    project: "Video",
+  },
+];
+
+const showPlaceholders =
+  (typeof import.meta !== 'undefined' && import.meta.env && import.meta.env.VITE_SHOW_PLACEHOLDERS === 'true') ||
+  (typeof process !== 'undefined' && process.env && process.env.VITE_SHOW_PLACEHOLDERS === 'true');
+
+export const testimonialsList = showPlaceholders ? placeholderTestimonials : [];
 
 export const portfolioContent = {
   motion: motionConfig,
@@ -18,19 +70,24 @@ export const portfolioContent = {
     title: "Packaging Designer, Video Editor & Software Founder",
     location: "Tamil Nadu, India",
     email: "kesavkumarthamburaj@gmail.com",
+    siteUrl: SITE_URL,
+    url: `${SITE_URL}/`,
     instagramUrl: socialLinks.instagram,
+    linkedinUrl: socialLinks.linkedin,
     githubUrl: "https://github.com",
-    linkedinUrl: "https://linkedin.com",
     copyrightYear: 2026,
   },
 
-  nav: [
-    { label: "Packaging", href: "#packaging" },
-    { label: "Posters & Creatives", href: "#creatives" },
-    { label: "Software", href: "#software" },
-    { label: "Arsenal", href: "#arsenal" },
-    { label: "Contact", href: "#contact" },
-  ],
+  get nav() {
+    return [
+      { label: "Packaging", href: "#packaging" },
+      { label: "Posters & Creatives", href: "#creatives" },
+      { label: "Software", href: "#software" },
+      ...(testimonialsList.length > 0 ? [{ label: "Kind Words", href: "#testimonials" }] : []),
+      { label: "Arsenal", href: "#arsenal" },
+      { label: "Contact", href: "#contact" },
+    ];
+  },
 
   hero: {
     headlineParts: ["KESAV", "DESIGNS", "THE SHELF."],
@@ -292,6 +349,13 @@ export const portfolioContent = {
     ],
   },
 
+  testimonials: {
+    sectionId: "testimonials",
+    tag: "CLIENT VOICES",
+    headline: "KIND WORDS",
+    items: testimonialsList,
+  },
+
   arsenal: {
     sectionId: "arsenal",
     tag: "STACK & WORKFLOW",
@@ -346,6 +410,7 @@ export const portfolioContent = {
     email: "kesavkumarthamburaj@gmail.com",
     location: "Tamil Nadu, India",
     instagram: socialLinks.instagram,
+    linkedin: socialLinks.linkedin,
     projectTypes: [
       "Packaging",
       "Posters/Banners",

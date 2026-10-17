@@ -71,7 +71,8 @@ export default function AdminVisitorsDashboard({ isDark, onToggleDark }) {
 
       if (res.status === 401) {
         setIsAuthenticated(false);
-        setErrorMsg('Unauthorized: Incorrect admin key.');
+        const errData = await res.json().catch(() => ({}));
+        setErrorMsg(errData.message || 'Unauthorized: Incorrect admin key.');
         setLoading(false);
         return;
       }
