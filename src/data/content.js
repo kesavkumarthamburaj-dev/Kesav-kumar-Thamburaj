@@ -6,7 +6,7 @@ import { motionConfig, TOOL_LOGOS } from './motion.config.js';
 
 // Single source of truth for portfolio site URL (no trailing slash).
 // When your custom domain is live, change only this constant.
-export const SITE_URL = "https://kesav-kumar-thamburaj.vercel.app";
+export const SITE_URL = "https://kesavkumarthamburaj.in";
 
 const socialLinks = {
   instagram: "https://www.instagram.com/kesavkumarthamburaj/",
