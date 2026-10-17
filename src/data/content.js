@@ -396,7 +396,7 @@ export const portfolioContent = {
       },
       {
         id: "arsenal-video",
-        title: "Video",
+        title: "Video and motion",
         stripColor: "#2F5BFF", // blue
         textColor: "#FFFFFF",
         tools: [
@@ -404,6 +404,8 @@ export const portfolioContent = {
           { name: "Final Cut Pro", logo: "/logos/final-cut-pro.svg" },
           { name: "CapCut", logo: "/logos/capcut.svg" },
           { name: "DaVinci Resolve", logo: "/logos/davinci-resolve.svg" },
+          { name: "After Effects", logo: "/logos/after-effects.svg" },
+          { name: "Cavalry", logo: "/logos/cavalry.svg" },
         ],
       },
       {
@@ -416,6 +418,20 @@ export const portfolioContent = {
           { name: "ChatGPT", logo: "/logos/chatgpt.svg" },
           { name: "Antigravity", logo: "/logos/antigravity.svg" },
           { name: "Codex", logo: "/logos/codex.svg" },
+          { name: "Gemini", logo: "/logos/gemini.svg" },
+          { name: "Flow", logo: "/logos/flow.svg" },
+          { name: "Higgsfield", logo: "/logos/higgsfield.svg" },
+        ],
+      },
+      {
+        id: "arsenal-dev",
+        title: "Dev stack",
+        stripColor: "#FF7A1A", // tangerine
+        textColor: "#111111",
+        tools: [
+          { name: "GitHub", logo: "/logos/github.svg" },
+          { name: "Vercel", logo: "/logos/vercel.svg" },
+          { name: "Supabase", logo: "/logos/supabase.svg" },
         ],
       },
     ],

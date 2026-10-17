@@ -144,8 +144,8 @@ export default function ArsenalSection({ isDark }) {
           />
         </Reveal>
 
-        {/* 3 Columns with Coloured Header Strips (Design = pink, Video = blue, AI tools = mint) */}
-        <Reveal amount={0.2} className="grid grid-cols-1 md:grid-cols-3 gap-8 lg:gap-10">
+        {/* 4 Columns with Coloured Header Strips (Design, Video and motion, AI tools, Dev stack) */}
+        <Reveal amount={0.2} className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 lg:gap-6 xl:gap-8">
           {arsenal.columns.map((col, colIdx) => (
             <motion.div
               key={col.id}
@@ -165,21 +165,21 @@ export default function ArsenalSection({ isDark }) {
             >
               {/* Coloured Header Strip */}
               <div
-                className="px-6 py-4 border-b-2.5 border-[#111111] flex items-center justify-between"
+                className="px-5 py-4 border-b-2.5 border-[#111111] flex items-center justify-between"
                 style={{
                   backgroundColor: col.stripColor,
                   color: col.textColor,
                 }}
               >
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2.5">
                   <span className="w-3.5 h-3.5 rounded-full bg-[#111111] border-2 border-white/60" />
-                  <h3 className="font-headline text-3xl font-black uppercase tracking-[var(--track-heading)] text-balance">
+                  <h3 className="font-headline text-2xl xl:text-3xl font-black uppercase tracking-[var(--track-heading)] text-balance">
                     {col.title}
                   </h3>
                 </div>
 
                 <span
-                  className="font-mono text-xs font-black uppercase px-2.5 py-1 rounded border-2 border-[#111111] tabular-nums tracking-[0.02em]"
+                  className="font-mono text-xs font-black uppercase px-2 py-0.5 rounded border-2 border-[#111111] tabular-nums tracking-[0.02em] shrink-0"
                   style={{
                     backgroundColor: col.stripColor === '#2F5BFF' ? '#FFD60A' : '#111111',
                     color: col.stripColor === '#2F5BFF' ? '#111111' : '#FFF8EC',
@@ -189,13 +189,13 @@ export default function ArsenalSection({ isDark }) {
                 </span>
               </div>
 
-              {/* Chunky Chips: Wrap 2 per row, 44px min touch height on mobile */}
+              {/* Chunky Chips: Wrap 2 per row on mobile/tablet, 1 per row in 4-col desktop */}
               <div
-                className={`p-5 sm:p-6 flex-1 flex flex-col justify-between ${
+                className={`p-4 sm:p-5 flex-1 flex flex-col justify-between ${
                   isDark ? 'bg-[#1A1815]' : 'bg-paper'
                 }`}
               >
-                <div className="grid grid-cols-2 gap-2.5 sm:gap-3">
+                <div className="grid grid-cols-2 lg:grid-cols-1 gap-2.5 sm:gap-3">
                   {col.tools.map((tool, tIdx) => (
                     <ToolChip
                       key={tool.name}
