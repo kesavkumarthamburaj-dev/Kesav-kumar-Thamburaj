@@ -36,9 +36,14 @@ function formatRoleCompany(role, company) {
   return parts.join(', ');
 }
 
-function TestimonialCard({ item, index, isDark, shouldReduceMotion }) {
-  // Alternating card rotation (-2deg / +2deg), straightens on hover
-  const initialRotation = shouldReduceMotion ? 0 : (index % 2 === 0 ? -2 : 2);
+function TestimonialCard({ item, index, isDark, isMobile = false, isActive = false, shouldReduceMotion }) {
+  // Alternating card rotation: on mobile -1deg / +1deg; on desktop -2deg / +2deg
+  const initialRotation = shouldReduceMotion
+    ? 0
+    : isMobile
+      ? (index % 2 === 0 ? -1 : 1)
+      : (index % 2 === 0 ? -2 : 2);
+
   const tagStyle = getProjectTagStyle(item.project, isDark);
   const roleCompany = formatRoleCompany(item.role, item.company);
 
@@ -48,31 +53,54 @@ function TestimonialCard({ item, index, isDark, shouldReduceMotion }) {
     ? `${item.quote.slice(0, MAX_QUOTE_LENGTH - 3).trim()}...`
     : item.quote;
 
+  const targetOpacity = isMobile ? (isActive ? 1 : 0.85) : 1;
+
   return (
     <motion.article
-      initial={shouldReduceMotion ? { opacity: 0 } : { opacity: 0, scale: 0.88, y: 30, rotate: initialRotation }}
-      whileInView={shouldReduceMotion ? { opacity: 1 } : { opacity: 1, scale: 1, y: 0, rotate: initialRotation }}
+      initial={
+        shouldReduceMotion
+          ? { opacity: 0 }
+          : isMobile
+            ? { opacity: targetOpacity, scale: 1, rotate: initialRotation }
+            : { opacity: 0, scale: 0.88, y: 30, rotate: initialRotation }
+      }
+      whileInView={
+        shouldReduceMotion
+          ? { opacity: targetOpacity }
+          : isMobile
+            ? { opacity: targetOpacity, scale: 1, rotate: initialRotation }
+            : { opacity: 1, scale: 1, y: 0, rotate: initialRotation }
+      }
+      animate={
+        isMobile
+          ? { opacity: targetOpacity, scale: 1, rotate: initialRotation }
+          : undefined
+      }
       viewport={{ once: true, amount: 0.15 }}
-      whileHover={shouldReduceMotion ? undefined : { rotate: 0, scale: 1.02, transition: { duration: 0.25, ease: 'easeOut' } }}
-      transition={{ duration: 0.45, ease: [0.22, 1, 0.36, 1], delay: shouldReduceMotion ? 0 : index * 0.1 }}
-      className={`group relative flex flex-col justify-between p-6 sm:p-8 rounded-xl border-3 select-none transition-shadow shrink-0 w-full bg-[#FFF8EC] text-[#111111] border-[#111111] ${
+      whileHover={
+        shouldReduceMotion || isMobile
+          ? undefined
+          : { rotate: 0, scale: 1.02, transition: { duration: 0.25, ease: 'easeOut' } }
+      }
+      transition={{ duration: 0.25, ease: [0.22, 1, 0.36, 1], delay: shouldReduceMotion ? 0 : (isMobile ? 0 : index * 0.1) }}
+      className={`group relative flex flex-col justify-between p-6 sm:p-8 rounded-xl border-3 select-none transition-shadow shrink-0 w-full h-full bg-[#FFF8EC] text-[#111111] border-[#111111] ${
         isDark
           ? 'shadow-[5px_5px_0px_#3DDC97]'
           : 'shadow-[5px_5px_0px_#111111]'
       }`}
     >
       {/* 1. Large decorative quote mark */}
-      <div className="mb-4" aria-hidden="true">
+      <div className="mb-4 shrink-0" aria-hidden="true">
         <Quote className="w-11 h-11 sm:w-12 sm:h-12 fill-[#111111] text-[#111111] rotate-180" />
       </div>
 
       {/* 2. Quote in DM Sans 17px, line-height 1.6, text-wrap: pretty */}
-      <blockquote className="flex-1 font-body text-[17px] leading-[1.6] [text-wrap:pretty] font-medium text-[#111111] mb-6">
+      <blockquote className="flex-1 font-body text-[17px] leading-[1.6] [text-wrap:pretty] font-medium text-[#111111] mb-6 flex flex-col justify-start">
         {displayQuote}
       </blockquote>
 
       {/* Meta: Name (bold ink #111111) + "role, company" below it + project sticker tag */}
-      <div className="pt-4 border-t-2 border-dashed border-[#111111]/25 flex flex-col gap-3">
+      <div className="pt-4 border-t-2 border-dashed border-[#111111]/25 flex flex-col gap-3 mt-auto shrink-0">
         {/* 3. Name (bold ink #111111) and "role, company" below it */}
         <div>
           <p className="font-body font-black text-base sm:text-lg text-[#111111] leading-snug">
@@ -177,7 +205,11 @@ export default function TestimonialsSection({ isDark }) {
     <section
       id={sectionId || 'testimonials'}
       aria-label="Client Testimonials"
-      className={`relative scroll-mt-16 sm:scroll-mt-20 py-20 sm:py-28 overflow-hidden transition-colors ${
+      style={{
+        overflowX: 'clip',
+        '--section-pad': '16px',
+      }}
+      className={`relative scroll-mt-16 sm:scroll-mt-20 py-20 sm:py-28 transition-colors ${
         isDark ? 'bg-[#0B1D15] text-[#FFF8EC]' : 'bg-[#3DDC97] text-[#111111]'
       }`}
     >
@@ -200,10 +232,9 @@ export default function TestimonialsSection({ isDark }) {
             <h2 className="sr-only">{headline || 'KIND WORDS'}</h2>
             <MaskedHeadline
               as="div"
+              lines={headline || 'KIND WORDS'}
               className="font-headline text-6xl sm:text-7xl md:text-8xl lg:text-9xl uppercase tracking-[var(--track-heading)] leading-none select-none text-stroke"
-            >
-              {headline || 'KIND WORDS'}
-            </MaskedHeadline>
+            />
           </div>
           <p
             className={`font-mono text-xs sm:text-sm font-bold uppercase tracking-wider ${
@@ -216,21 +247,29 @@ export default function TestimonialsSection({ isDark }) {
 
         {/* Testimonials Container */}
         {/* Mobile: Horizontal swipe carousel with snap, dots, swipe hint, prev/next buttons */}
-        <div className="md:hidden flex flex-col items-center">
+        <div className="md:hidden flex flex-col items-center w-full">
           <div
             ref={carouselRef}
             tabIndex={0}
             onKeyDown={handleKeyDown}
             aria-label="Client testimonials carousel. Use left and right arrow keys to navigate."
             role="region"
-            className="w-full flex overflow-x-auto snap-x snap-mandatory scrollbar-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD60A]"
+            className="flex overflow-x-auto snap-x snap-mandatory scrollbar-none focus:outline-none focus-visible:ring-2 focus-visible:ring-[#FFD60A]"
             style={{
+              width: 'calc(100% + 2 * var(--section-pad, 16px))',
+              maxWidth: '100vw',
+              marginInline: 'calc(-1 * var(--section-pad, 16px))',
+              paddingInline: 'calc((100vw - min(86vw, 360px)) / 2)',
+              scrollPaddingInline: 'calc((100vw - min(86vw, 360px)) / 2)',
+              paddingBlock: '28px',
+              marginBlock: '-28px',
+              display: 'flex',
+              alignItems: 'stretch',
               scrollSnapType: 'x mandatory',
               overscrollBehaviorX: 'contain',
               touchAction: 'pan-x pan-y',
               WebkitOverflowScrolling: 'touch',
-              gap: '14px',
-              paddingInline: 'calc((100vw - min(86vw, 360px)) / 2)',
+              gap: '12px',
               scrollbarWidth: 'none',
               msOverflowStyle: 'none',
             }}
@@ -239,15 +278,18 @@ export default function TestimonialsSection({ isDark }) {
               <div
                 key={`${item.name}-${idx}`}
                 style={{
-                  width: 'min(86vw, 360px)',
+                  flex: '0 0 86vw',
+                  maxWidth: '360px',
                   scrollSnapAlign: 'center',
-                  flexShrink: 0,
+                  display: 'flex',
                 }}
               >
                 <TestimonialCard
                   item={item}
                   index={idx}
                   isDark={isDark}
+                  isMobile={true}
+                  isActive={activeIndex === idx}
                   shouldReduceMotion={shouldReduceMotion}
                 />
               </div>
@@ -357,6 +399,7 @@ export default function TestimonialsSection({ isDark }) {
               item={item}
               index={idx}
               isDark={isDark}
+              isMobile={false}
               shouldReduceMotion={shouldReduceMotion}
             />
           ))}
