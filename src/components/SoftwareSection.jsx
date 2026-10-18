@@ -52,6 +52,7 @@ export default function SoftwareSection({ isDark, onOpenProductModal }) {
             const slapRotation = idx % 2 === 0 ? 6 : -6;
             const isHovered = hoveredIdx === idx;
             const spinRotation = idx % 2 === 0 ? 8 : -8;
+            const isFullWidth = idx === software.products.length - 1 && software.products.length % 2 !== 0;
 
             return (
               <motion.article
@@ -78,7 +79,7 @@ export default function SoftwareSection({ isDark, onOpenProductModal }) {
                     ? undefined
                     : {
                         y: -8,
-                        scale: 1.03,
+                        scale: isFullWidth ? 1.015 : 1.03,
                         rotate: 0,
                         transition: { duration: 0.2, ease: [0.22, 1, 0.36, 1] },
                       }
@@ -88,6 +89,8 @@ export default function SoftwareSection({ isDark, onOpenProductModal }) {
                 onMouseLeave={() => setHoveredIdx(null)}
                 data-cursor="view"
                 className={`group relative rounded-xl overflow-hidden flex flex-col justify-between cursor-pointer ${
+                  isFullWidth ? 'md:col-span-2' : ''
+                } ${
                   isDark
                     ? 'bg-[#1A1815] border border-[#2E2A24] hover:border-tangerine hover:shadow-[0_0_28px_rgba(255,122,26,0.2)]'
                     : 'bg-paper border-3.5 border-ink shadow-[6px_6px_0px_#111111] hover:shadow-[10px_10px_0px_#111111]'
@@ -125,103 +128,106 @@ export default function SoftwareSection({ isDark, onOpenProductModal }) {
                   </div>
                 </div>
 
-                {/* App Image Preview / UI Mockup */}
-                <div className="p-2.5 sm:p-3">
-                  <div className={`relative aspect-[16/10] w-full overflow-hidden border ${
-                    isDark
-                      ? 'mockup-frame bg-[#FFF8EC] border-[#2E2A24] rounded-lg p-2'
-                      : 'bg-ink/5 border-b-2.5 border-ink rounded'
-                  }`}>
-                    <img
-                      src={product.image}
-                      alt={product.name}
-                      width={product.width}
-                      height={product.height}
-                      loading="lazy"
-                      decoding="async"
-                      className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-104 ${
-                        isDark ? 'framed-mockup' : ''
-                      }`}
-                    />
+                {/* Card Inner: Side-by-side on desktop for full-width 5th card */}
+                <div className={`flex-1 flex flex-col ${isFullWidth ? 'md:flex-row' : ''}`}>
+                  {/* App Image Preview / UI Mockup */}
+                  <div className={`p-2.5 sm:p-3 ${isFullWidth ? 'md:w-1/2 md:p-5 flex flex-col justify-center' : ''}`}>
+                    <div className={`relative aspect-[16/10] w-full overflow-hidden border ${
+                      isDark
+                        ? 'mockup-frame bg-[#FFF8EC] border-[#2E2A24] rounded-lg p-2'
+                        : 'bg-ink/5 border-b-2.5 border-ink rounded'
+                    }`}>
+                      <img
+                        src={product.image}
+                        alt={product.name}
+                        width={product.width}
+                        height={product.height}
+                        loading="lazy"
+                        decoding="async"
+                        className={`w-full h-full object-cover transition-transform duration-500 group-hover:scale-104 ${
+                          isDark ? 'framed-mockup' : ''
+                        }`}
+                      />
 
-                    <div className="absolute bottom-3 left-3">
-                      <span className="px-2.5 py-1 bg-yellow text-[#111111] font-mono text-[11px] font-bold uppercase rounded border border-[#111111] shadow-[1px_1px_0px_#111111] tabular-nums tracking-[0.02em]">
-                        {product.metrics}
+                      <div className="absolute bottom-3 left-3">
+                        <span className="px-2.5 py-1 bg-yellow text-[#111111] font-mono text-[11px] font-bold uppercase rounded border border-[#111111] shadow-[1px_1px_0px_#111111] tabular-nums tracking-[0.02em]">
+                          {product.metrics}
+                        </span>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Card Body */}
+                  <div className={`p-6 flex-1 flex flex-col justify-between ${isFullWidth ? 'md:w-1/2 md:p-8' : ''}`}>
+                    <div>
+                      <h3 className={`font-headline text-3xl sm:text-4xl leading-tight uppercase tracking-[var(--track-heading)] transition-colors text-balance ${
+                        isDark ? 'text-[#FFF8EC] group-hover:text-tangerine' : 'text-ink'
+                      }`}>
+                        {product.name}
+                      </h3>
+
+                      <p className={`mt-1 font-body text-sm sm:text-base font-bold leading-snug tracking-[var(--track-lead)] ${
+                        isDark ? 'text-tangerine' : 'text-ink'
+                      }`}>
+                        {product.tagline}
+                      </p>
+
+                      <p className={`mt-3 font-body text-xs sm:text-sm leading-relaxed text-pretty ${
+                        isDark ? 'text-[#C9BFAE]' : 'text-ink/80'
+                      }`}>
+                        {product.description}
+                      </p>
+
+                      {/* Tech Stack Pills */}
+                      <div className="mt-4 flex flex-wrap gap-1.5">
+                        {product.tags.map((tag, tIdx) => (
+                          <span
+                            key={tIdx}
+                            className={`px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-[var(--track-label)] rounded border ${
+                              isDark
+                                ? 'bg-[#14120F] text-[#FFF8EC] border-[#2E2A24]'
+                                : 'bg-paper text-ink border-1.5 border-ink shadow-[1px_1px_0px_#111111]'
+                            }`}
+                          >
+                            {tag}
+                          </span>
+                        ))}
+                      </div>
+                    </div>
+
+                    {/* Card Action: View Button with Arrow sliding 6px right on hover */}
+                    <div className={`mt-6 pt-4 border-t flex items-center justify-between ${
+                      isDark ? 'border-[#2E2A24]' : 'border-ink/20'
+                    }`}>
+                      <div className="flex items-center gap-2.5">
+                        {product.url && product.url !== '#' && (
+                          <a
+                            href={product.url}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            onClick={(e) => e.stopPropagation()}
+                            className="btn-slide-fill inline-flex items-center gap-1.5 px-4 py-2 bg-mint text-[#111111] font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2.5 border-[#111111] shadow-[2px_2px_0px_#111111] hover:bg-yellow hover:scale-105 transition-all cursor-pointer"
+                          >
+                            <span>{product.viewLabel || 'Live App'}</span>
+                            <ArrowUpRight className="w-4 h-4 text-[#111111]" />
+                          </a>
+                        )}
+
+                        <motion.button
+                          whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
+                          onClick={() => onOpenProductModal(product)}
+                          className="btn-slide-fill group/btn px-4 py-2 bg-yellow text-[#111111] font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2 border-[#111111] shadow-[2px_2px_0px_#111111] hover:bg-mint transition-colors duration-150 inline-flex items-center gap-1.5 cursor-pointer"
+                        >
+                          <span>Details</span>
+                        </motion.button>
+                      </div>
+
+                      <span className={`font-mono text-xs font-bold uppercase tracking-[var(--track-label)] ${
+                        isDark ? 'text-[#C9BFAE]' : 'text-ink/60'
+                      }`}>
+                        NO. 0{idx + 1}
                       </span>
                     </div>
-                  </div>
-                </div>
-
-                {/* Card Body */}
-                <div className="p-6 flex-1 flex flex-col justify-between">
-                  <div>
-                    <h3 className={`font-headline text-3xl sm:text-4xl leading-tight uppercase tracking-[var(--track-heading)] transition-colors text-balance ${
-                      isDark ? 'text-[#FFF8EC] group-hover:text-tangerine' : 'text-ink'
-                    }`}>
-                      {product.name}
-                    </h3>
-
-                    <p className={`mt-1 font-body text-sm sm:text-base font-bold leading-snug tracking-[var(--track-lead)] ${
-                      isDark ? 'text-tangerine' : 'text-ink'
-                    }`}>
-                      {product.tagline}
-                    </p>
-
-                    <p className={`mt-3 font-body text-xs sm:text-sm leading-relaxed text-pretty ${
-                      isDark ? 'text-[#C9BFAE]' : 'text-ink/80'
-                    }`}>
-                      {product.description}
-                    </p>
-
-                    {/* Tech Stack Pills */}
-                    <div className="mt-4 flex flex-wrap gap-1.5">
-                      {product.tags.map((tag, tIdx) => (
-                        <span
-                          key={tIdx}
-                          className={`px-2.5 py-1 font-mono text-[11px] font-bold uppercase tracking-[var(--track-label)] rounded border ${
-                            isDark
-                              ? 'bg-[#14120F] text-[#FFF8EC] border-[#2E2A24]'
-                              : 'bg-paper text-ink border-1.5 border-ink shadow-[1px_1px_0px_#111111]'
-                          }`}
-                        >
-                          {tag}
-                        </span>
-                      ))}
-                    </div>
-                  </div>
-
-                  {/* Card Action: View Button with Arrow sliding 6px right on hover */}
-                  <div className={`mt-6 pt-4 border-t flex items-center justify-between ${
-                    isDark ? 'border-[#2E2A24]' : 'border-ink/20'
-                  }`}>
-                    <div className="flex items-center gap-2.5">
-                      {product.url && product.url !== '#' && (
-                        <a
-                          href={product.url}
-                          target="_blank"
-                          rel="noopener noreferrer"
-                          onClick={(e) => e.stopPropagation()}
-                          className="btn-slide-fill inline-flex items-center gap-1.5 px-4 py-2 bg-mint text-[#111111] font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2.5 border-[#111111] shadow-[2px_2px_0px_#111111] hover:bg-yellow hover:scale-105 transition-all cursor-pointer"
-                        >
-                          <span>Live App</span>
-                          <ArrowUpRight className="w-4 h-4 text-[#111111]" />
-                        </a>
-                      )}
-
-                      <motion.button
-                        whileTap={shouldReduceMotion ? undefined : { scale: 0.96 }}
-                        onClick={() => onOpenProductModal(product)}
-                        className="btn-slide-fill group/btn px-4 py-2 bg-yellow text-[#111111] font-mono text-xs sm:text-sm font-bold uppercase tracking-[var(--track-button)] whitespace-nowrap rounded border-2 border-[#111111] shadow-[2px_2px_0px_#111111] hover:bg-mint transition-colors duration-150 inline-flex items-center gap-1.5 cursor-pointer"
-                      >
-                        <span>Details</span>
-                      </motion.button>
-                    </div>
-
-                    <span className={`font-mono text-xs font-bold uppercase tracking-[var(--track-label)] ${
-                      isDark ? 'text-[#C9BFAE]' : 'text-ink/70'
-                    }`}>
-                      INDIE LAB
-                    </span>
                   </div>
                 </div>
               </motion.article>

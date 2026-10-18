@@ -14,6 +14,7 @@ export default function FloatingToolsLayer({ isDark, shouldReduceMotion }) {
   const [isMobile, setIsMobile] = useState(false);
   const [isFormFocused, setIsFormFocused] = useState(false);
   const [lowPerfMode, setLowPerfMode] = useState(false);
+  const [isInHiddenSection, setIsInHiddenSection] = useState(false);
 
   // Responsive check
   useEffect(() => {
@@ -22,6 +23,36 @@ export default function FloatingToolsLayer({ isDark, shouldReduceMotion }) {
     window.addEventListener('resize', handleResize, { passive: true });
     return () => window.removeEventListener('resize', handleResize);
   }, []);
+
+  // Hide floating icons completely inside Testimonials and Contact sections on mobile (< 768px)
+  useEffect(() => {
+    if (!isMobile) {
+      setIsInHiddenSection(false);
+      return;
+    }
+
+    const checkSections = () => {
+      const vh = window.innerHeight;
+      const testEl = document.getElementById('testimonials');
+      const contactEl = document.getElementById('contact');
+
+      const isVisible = (el) => {
+        if (!el) return false;
+        const rect = el.getBoundingClientRect();
+        return rect.top < vh - 50 && rect.bottom > 50;
+      };
+
+      if (isVisible(testEl) || isVisible(contactEl)) {
+        setIsInHiddenSection(true);
+      } else {
+        setIsInHiddenSection(false);
+      }
+    };
+
+    window.addEventListener('scroll', checkSections, { passive: true });
+    checkSections();
+    return () => window.removeEventListener('scroll', checkSections);
+  }, [isMobile]);
 
   // Form focus detection: hide floating layer while user is typing in form
   useEffect(() => {
@@ -194,8 +225,8 @@ export default function FloatingToolsLayer({ isDark, shouldReduceMotion }) {
   return (
     <div
       ref={containerRef}
-      className={`fixed inset-0 pointer-events-none overflow-hidden z-[18] transition-opacity duration-300 ${
-        isFormFocused ? 'opacity-0' : 'opacity-90'
+      className={`fixed inset-0 pointer-events-none overflow-hidden z-[1] transition-opacity duration-300 ${
+        isFormFocused || (isMobile && isInHiddenSection) ? 'opacity-0' : 'opacity-90'
       }`}
       aria-hidden="true"
     >

@@ -211,7 +211,7 @@ export default function App() {
       <Navbar isDark={isDark} onToggleDark={toggleTheme} />
 
       {/* MAIN SECTIONS IN SPECIFIED ORDER */}
-      <main className="flex-1">
+      <main className="flex-1 relative z-10">
         {/* 1. HERO (Yellow: #FFD60A light, #1A1700 dark) */}
         <HeroSection isDark={isDark} />
 
